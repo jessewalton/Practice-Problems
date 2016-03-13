@@ -3,9 +3,24 @@
 from itertools import izip
 
 '''
-	Problem: 
-		Given a n*m array, start at the top left and traverse it in a clockwise
-		spiral
+
+	::: Description ::: 
+
+	Define 'traverse_cw_spiral(ARRAY)' to navigate a given array, starting at
+	the top left and traversing it in a clockwise spiral. Return the order as a
+	list. 
+
+
+	::: Example ::: 
+
+	Array
+	 1 	 2 	 3 	 4
+	 5 	 6	 7	 8	
+	 9 	10	11	12
+	13	14	15	16
+
+	Solution 
+	[1, 2, 3, 4, 8, 12, 16, 15, 14, 13, 9, 5, 6, 7, 12, 10]
 
 '''
 
@@ -18,7 +33,7 @@ from itertools import izip
 def traverse_cw_spiral(ARRAY_NxM):
 	traverse_order = []
 
-	# define function 
+	# code goes here!
 
 	return traverse_order
 
@@ -57,14 +72,18 @@ def compare_lists(CORRECT_LIST, PROPOSED_LIST):
 
 # check the solution to a 4 by 4 array
 def check_4by4(CHECK_LIST_ORDER):
-	print "4 by 4:",
 	correct_order = [1, 2, 3, 4, 8, 12, 16, 15, 14, 13, 9, 5, 6, 7, 12, 10]
+
+	print "Expected Order:\t", correct_order
+	print "Actual Order:\t", CHECK_LIST_ORDER
+
 	if compare_lists(correct_order, CHECK_LIST_ORDER):
-		print "Lists match"
+		print "4 by 4: Lists match"
 		return True
 	else: 
-		print "Lists do not match"
+		print "4 by 4: Lists do not match"
 		return False
+
 
 
 
