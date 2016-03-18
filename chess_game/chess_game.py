@@ -23,13 +23,26 @@ class ChessGame(object):
 		print "resetPieces()"
 
 	def __isCheckmate(self):
-		return True
+		print "isCheckmate()"
+		if (True):
+			return True
 
+	def __currentPlayer(self):
+		if self.turn == 0:
+			self.turn = 1
+			return "White"
+		elif self.turn == 1:
+			self.turn = 0
+			return "Black"
 	# 
 	def playGame(self):
+		print "Begin Game"
 		while(self.checkmate != True):
-			print "Begin game"
-			self.checkmate = True
+
+			# determine turn
+			player = self.__currentPlayer()
+			print "Begin %s Turn" % player
+			
 
 			if (self.__isCheckmate()):
 				break
