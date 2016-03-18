@@ -7,29 +7,33 @@ class ChessGame(object):
 	white_pieces = []
 	black_pieces = []
 	turn = 0
-	checkmate = 0
+	checkmate = False
 
 	def __init__(self):
-		__resetBoard()
-		__resetPieces()
+		self.__resetBoard()
+		self.__resetPieces()
 
 
 	# reset board
 	def __resetBoard(self):
-		pass
+		print "resetBoard()"
 
 	# reset pieces
 	def __resetPieces(self):
-		pass
+		print "resetPieces()"
+
+	def __isCheckmate(self):
+		return True
 
 	# 
 	def playGame(self):
-		while(!checkmate):
+		while(self.checkmate != True):
 			print "Begin game"
+			self.checkmate = True
 
-			if (True):
+			if (self.__isCheckmate()):
 				break
-		print "Checkmate"
+		print "Checkmate!"
 		print "Game Over"
 	
 
@@ -40,7 +44,7 @@ class ChessGame(object):
 	# y - y coordinate to check
 	def checkDestination(self, x, y):
 		
-		if return True
+		return True
 
 
 class ChessPiece(object):
@@ -61,4 +65,5 @@ class Pawn(ChessPiece):
 
 
 newGame = ChessGame()
+
 newGame.playGame()
