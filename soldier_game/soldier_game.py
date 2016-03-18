@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 class Soldier(object):
 
     health_stat = 100
@@ -46,3 +48,4 @@ ally_heavy.attack(enemy_grenadier)
 
 ally_grenadier.print_status()
 enemy_grenadier.print_status()
+
