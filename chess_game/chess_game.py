@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 class ChessGame(object):
+	'Chess game info'
 	BOARD_SIZE = 8
 	num_pieces = BOARD_SIZE * 2
 	# 2D array, stores piece UID at location
@@ -54,14 +55,12 @@ class ChessGame(object):
 		self.white_pieces.append( Pawn(8) )
 		
 		self.white_pieces.append( Rook(9) )
-		"""
 		self.white_pieces.append( Knight(10) )
 		self.white_pieces.append( Bishop(11) )
 		self.white_pieces.append( Queen(12) )
 		self.white_pieces.append( King(13) )
 		self.white_pieces.append( Bishop(14) )
 		self.white_pieces.append( Knight(15) )
-		"""
 		self.white_pieces.append( Rook(16) )
 		
 
@@ -85,11 +84,22 @@ class ChessGame(object):
 		pass
 
 	def __printBoard(self):
-		print "Game Board"
+		print "Game Board - White\n"
 		for i in range(0, 8):
+			print "\t\t",
 			for j in range(0, 8):
-				print self.game_board[i][j], 
-			print
+				print "%4s" % self.game_board[i][j], 
+			print "\n"
+
+		print "Game Board - Black\n"
+		for i in range(8, 0, -1):
+			#print i
+			print "\t\t",
+			for j in range(8, 0, -1):
+				print "%4s" % self.game_board[i-1][j-1],
+			print "\n"
+
+
 	# 
 	def playGame(self):
 		print "Begin Game"
@@ -100,12 +110,12 @@ class ChessGame(object):
 			# determine turn
 			print "Begin %s Turn" % self.player[self.turn]
 
-			piece_uid = raw_input("Select Piece: ")
-			print "piece: ", piece_uid
+			#piece_uid = raw_input("Select Piece: ")
+			#print "piece: ", piece_uid
 			#print "selected %s @ [%s][%s]" % (self.white_pieces[piece_uid], self.white_pieces[piece_uid].x, self.white_pieces[piece_uid].y)
 
-			move = raw_input("Enter destination: ")
-			print "move to %s" % move
+			#move = raw_input("Enter destination: ")
+			#print "move to %s" % move
 
 			""" 
 			Player Turn:
@@ -140,15 +150,14 @@ class ChessGame(object):
 
 class ChessPiece(object):
 
-	x = 0
-	y = 0
-	move_x = 0
-	move_y = 0
-	team = 0
-	piece = ""
-
 	def __init__(self, uid):
 		self.uid = uid
+		self.x = 0
+		self.y = 0
+		self.move_x = 0
+		self.move_y = 0
+		self.team = 0
+		self.piece = ""
 
 		"""
 		# assign team
@@ -262,5 +271,6 @@ class King(ChessPiece):
 
 
 newGame = ChessGame()
+print newGame.__doc__
 
 newGame.playGame()
