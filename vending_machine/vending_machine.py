@@ -1,5 +1,13 @@
 #!/usr/bin/var python
 
+"""
+
+AUTHOR: Jesse Walton
+
+DESCRIPTION: Virtual vending machine with minimal functionality to test object
+  oriented design principles 
+
+"""
 
 class Vending_Machine(object):
   'Virtual vending machine to demonstrate object oriented design principles'
