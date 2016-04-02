@@ -208,7 +208,11 @@ class ChessBoard(object):
 
 
 
+""" 
+	Class:	ChessPiece 
+	Usage: 	contains team, current location, type, uid and movement patterns
 
+"""
 class ChessPiece(object):
 
 	def __init__(self, uid):
@@ -300,6 +304,9 @@ class ChessPiece(object):
 		validMoves = []
 		return validMoves
 
+
+
+
 class Pawn(ChessPiece):
 	def __init__(self, uid):
 		super(Pawn, self).__init__(uid)
@@ -324,12 +331,14 @@ class Rook(ChessPiece):
 		self.move_y = [1, 0]
 		self.multiple = 7
 
+
 class Knight(ChessPiece):
 	def __init__(self, uid):
 		super(Knight, self).__init__(uid)
 		self.move_x = [2, 1]
 		self.move_y = [1, 2]
 		self.multiple = 1
+
 
 class Bishop(ChessPiece):
 	def __init__(self, uid):
@@ -338,12 +347,14 @@ class Bishop(ChessPiece):
 		self.move_y = [1]
 		self.multiple = 7
 
+
 class Queen(ChessPiece):
 	def __init__(self, uid):
 		super(Queen, self).__init__(uid)
 		self.move_x = [0, 1, 1] # vertical, diagnal, horizontal
 		self.move_y = [1, 1, 0]
 		self.multiple = 7
+
 
 class King(ChessPiece):
 	def __init__(self, uid):
@@ -353,5 +364,8 @@ class King(ChessPiece):
 		self.multiple = 1
 
 
-newGame = ChessGame()
-#newGame.playGame()
+
+
+if __name__ == "__main__":
+	newGame = ChessGame()
+	#newGame.playGame()
