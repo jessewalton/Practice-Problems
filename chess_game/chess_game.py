@@ -88,17 +88,18 @@ class ChessGame(object):
 
 """
 class ChessBoard(object):
-		BOARD_SIZE = 8
-		num_pieces = BOARD_SIZE * 2
-		white_uid_range = range(1, 16)
-		black_uid_range = range(17, 32)
+	BOARD_SIZE = 8
+	num_pieces = BOARD_SIZE * 2
+	white_uid_range = range(1, 16)
+	black_uid_range = range(17, 32)
+	player = ["White", "Black"]
 
 	def __init__(self):
 
 		# define instance variables
 		self.turn = 0 		# 0 = white, 1 = black
 		self.checkmate = False
-		self.player = ["White", "Black"] 
+		#self.player = ["White", "Black"] 
 		self.white_pieces = []
 		self.black_pieces = []
 		self.game_board = []	# might be easier to have pieces on separate
@@ -125,7 +126,7 @@ class ChessBoard(object):
 	def __setBoard(self):
 		print "setBoard()"
 		for piece in self.white_pieces:
-			print "Board[%s][%s] -> %s %s" % piece.x, piece.y, self.player[piece.team], piece.name
+			print "Board[%s][%s] -> %s %s" % (piece.x, piece.y, self.player[piece.team], piece.name)
 			self.game_board[piece.y][piece.x] = piece.uid
 		self.__printBoard() #debug
 
@@ -175,10 +176,24 @@ class ChessBoard(object):
 
 	def __printBoard(self):
 		print "Game Board - White\n"
-		for i in range(0, 8):
-			print "\t\t",
-			for j in range(0, 8):
-				print "%4s" % self.game_board[i][j], 
+
+		# print x coord header
+		print "\t\t",
+		for x in range(0, 8):
+			print "%4s" % x,
+		print 
+
+		# print '--'
+		print "\t\t",
+		for x in range(0, 8):
+			print "----",
+		print
+
+		# print board
+		for row in range(0, 8):
+			print "\t %s    |" % row,
+			for col in range(0, 8):
+				print "%4s" % self.game_board[row][col], 
 			print "\n"
 
 		print "Game Board - Black\n"
@@ -188,9 +203,6 @@ class ChessBoard(object):
 			for j in range(8, 0, -1):
 				print "%4s" % self.game_board[i-1][j-1],
 			print "\n"
-
-
-	# 
 
 
 
