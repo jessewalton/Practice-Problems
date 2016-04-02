@@ -21,7 +21,7 @@ class ChessGame(object):
 
 		# create chess board
 		self.chess_board = ChessBoard() 
-		self.chess_board.
+		#self.chess_board.
 
 	# toggle to next player
 	def __togglePlayer(self):
