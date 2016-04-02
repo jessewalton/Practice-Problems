@@ -40,7 +40,6 @@ class ChessGame(object):
 		print "Begin Game"
 
 		while(self.checkmate != True):
-
 			
 			# determine turn
 			print "Begin %s Turn" % self.player[self.turn]
