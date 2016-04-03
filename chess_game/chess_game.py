@@ -40,7 +40,10 @@ class ChessGame(object):
 		self.chess_board.white_pieces[0].printInfo()
 
 		print "select piece to move using uid, resolve piece and print info"
-		self.chess_board.movePiece(9, 0, 0)
+		self.chess_board.movePiece(1, 0, 5)
+
+		print "\nBoard after move:"
+		self.chess_board.printBoard()
 
 		"""
 		print "self.chess_board.white_pieces[0].movePiece(0, 5):"
@@ -193,27 +196,44 @@ class ChessBoard(object):
 		piece = self.getPieceFromUid(uid)
 		piece.printInfo()
 
-"""
-		move_list = getValidMoves(uid)
+		# get all available moves
+		move_list = self.getValidMoves(uid)
 		
-		for x, y in move_list:
-			print "x: %s, y: %s" % (x, y)
-			#if x == x_dest and y == y_dest:
-				#self.game_board[piece.x][piece.y] = 0
-"""
+		# go through each tuple in move_list
+		for x_avail, y_avail in move_list:
+
+			# check if desired destination is in list of available destinations
+			if x_dest == x_avail and y_dest == y_avail:
+
+				# remove piece from current location
+				print "remove piece from (%s, %s)" % (piece.x, piece.y)
+				self.game_board[piece.y][piece.x] = 0
+
+				# remove any pieces at destination
+				self.game_board[y_dest][x_dest] = 0
+
+				# move piece to destination
+				self.game_board[y_dest][x_dest] = piece.uid
+
+			print
+		
+
 
 	# compare current position against piece movement options generate
 	# list of all available locations that are within bounds and do
 	# not contain own team pieces
 	def getValidMoves(self, uid):
-		piece = getPieceFromUid(uid)
+		piece = self.getPieceFromUid(uid)
 		curr_x = piece.x
 		curr_y = piece.y
 
-		#piece.moves #holds movement tuples
- 		
- 		test_list = [(0, 5)] #simulate a valid move for uid #1
- 		return test_list
+		#piece.moves = [] 	 #holds movement tuples		
+
+		test_list = [] #simulate a valid move for uid #1
+		test_list.append((0, 4))
+		test_list.append((0, 5))
+		
+		return test_list
 
 
 	# select piece by uid, return ChessPiece object
