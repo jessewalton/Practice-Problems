@@ -190,10 +190,10 @@ class ChessBoard(object):
 
 
 	def movePiece(self, uid, x_dest, y_dest):
-		passpiece = self.getPieceFromUid(uid)
+		piece = self.getPieceFromUid(uid)
 		piece.printInfo()
 
-"""
+
 		move_list = getValidMoves(uid)
 		
 		for x, y in move_list:
