@@ -35,6 +35,24 @@ class ChessGame(object):
 
 # public 
 
+	def test(self):
+		print "self.chess_board.white_pieces[0].printInfo():"
+		self.chess_board.white_pieces[0].printInfo()
+
+		print "select piece to move using uid, resolve piece and print info"
+		self.chess_board.movePiece(9, 0, 0)
+
+		"""
+		print "self.chess_board.white_pieces[0].movePiece(0, 5):"
+		self.chess_board.white_pieces[0].movePiece(0, 5)
+
+		print "self.chess_board.white_pieces[0].printInfo():"
+		self.chess_board.white_pieces[0].printInfo()
+
+		print "\nBoard after move:"
+		self.chess_board.printBoard()
+		"""
+
 	# handles player turns and input
 	def playGame(self):
 		print "Begin Game"
@@ -98,7 +116,6 @@ class ChessBoard(object):
 		# define instance variables
 		self.turn = 0 		# 0 = white, 1 = black
 		self.checkmate = False
-		#self.player = ["White", "Black"] 
 		self.white_pieces = []
 		self.black_pieces = []
 		self.game_board = []	# might be easier to have pieces on separate
@@ -118,24 +135,27 @@ class ChessBoard(object):
 			for x in range(0, 8):
 				new_row.append(0)
 			self.game_board.append(new_row)
-		self.__printBoard() #debug
+		self.printBoard() #debug
 
 
 	# put piece uid in x, y location
 	def __setBoard(self):
-		print "setBoard()"
+		debug = True
+		print "setBoard()" 
 		for piece in self.white_pieces:
-			print "Board[%s][%s] -> %s %s" % (piece.x, piece.y, self.player[piece.team], piece.name)
+
+			# debug print statement
+			#print "Board[%s][%s] -> %s %s" % (piece.x, piece.y, self.player[piece.team], piece.name)
+			
+			# assign piece uid to board location, should this be the ChessPiece obj?
 			self.game_board[piece.y][piece.x] = piece.uid
-		self.__printBoard() #debug
+		self.printBoard() #debug
 
 
 	# reset pieces
 	def __resetPieces(self):
 		print "resetPieces()" 	#debug
 
-		 
-		
 		self.white_pieces.append( Pawn(1) ) 
 		self.white_pieces.append( Pawn(2) )
 		self.white_pieces.append( Pawn(3) )
@@ -159,9 +179,6 @@ class ChessBoard(object):
 		for piece in self.white_pieces:
 			piece.printInfo()
 
-
-
-
 		#for uid in range(self.BOARD_SIZE * 2, ):
 		#	self.white_pieces[uid] = uid + 1
 
@@ -172,35 +189,66 @@ class ChessBoard(object):
 			return True
 
 
+	def movePiece(self, uid, x_dest, y_dest):
+		piece = self.getPieceFromUid(uid)
+		#print "uid: %s" % uid
+		piece.printInfo()
+		#print "\t(%s, %s) -> (%s, %s)" % (uid)
 
-	def __printBoard(self):
-		print "Game Board - White\n"
 
-		# print x coord header
+
+
+	def getPieceFromUid(self, uid):
+		for piece in self.white_pieces:
+			if piece.uid == uid:
+				return piece
+
+		for piece in self.black_pieces:
+			if piece.uid == uid:
+				return piece
+ 		
+
+
+	def printBoard(self):
+
+		print "\nGame Board - White\n"
+
+		# print col header
 		print "\t\t",
-		for x in range(0, 8):
-			print "%4s" % x,
-		print 
-
-		# print '--'
-		print "\t\t",
-		for x in range(0, 8):
-			print "----",
-		print
+		for col in range(0, 8):
+			print " {%s}" % col,
+		print "\n"
 
 		# print board
 		for row in range(0, 8):
-			print "\t %s    |" % row,
+
+			# row header
+			print "\t  {%s} " % row,
+
+			# col values
 			for col in range(0, 8):
 				print "%4s" % self.game_board[row][col], 
+
 			print "\n"
 
-		print "Game Board - Black\n"
-		for i in range(8, 0, -1):
-			#print i
-			print "\t\t",
-			for j in range(8, 0, -1):
-				print "%4s" % self.game_board[i-1][j-1],
+		print "\nGame Board - Black\n"
+
+		# print col header
+		print "\t\t",
+		for col in range(7, -1, -1):
+			print " {%s}" % col,
+		print "\n"
+
+		# print board
+		for row in range(8, 0, -1):
+
+			# row header
+			print "\t  {%s} " % (row-1),
+
+			# col values
+			for col in range(8, 0, -1):
+				print "%4s" % self.game_board[row-1][col-1],
+
 			print "\n"
 
 
@@ -224,13 +272,13 @@ class ChessPiece(object):
 		self.team = 0
 		self.name = ""
 
-		"""
+		
 		# assign team
 		if uid <= 16:
 			self.team = 0 #white
 		else:
 			self.team = 1 #black
-		"""
+		
 
 		# initialize location
 		if uid <= 16: 				# white team
@@ -281,15 +329,16 @@ class ChessPiece(object):
 		print "\tx:", self.x,
 		print "\ty:", self.y
 
+
 	# should be inherited by all pieces, use self.x and self.y to find current location and 
 	# uid - piece id
 	# x_coord - x coordinate destination
 	# y_coord - y coordinate destination
-	def movePiece(self, color, uid, x_coord, y_coord):
-		valid_move = checkDestination(x_coord, y_coord)
-		if valid_move:
-			self.x = x_coord
-			self.y = y_coord
+	def movePiece(self, x_coord_dest, y_coord_dest):
+		#valid_move = checkDestination(x_coord_dest, y_coord_dest)
+		#if valid_move:
+		self.x = x_coord_dest
+		self.y = y_coord_dest
 
 
 	# check if destination is available (if no other teamate is there)
@@ -318,9 +367,9 @@ class Pawn(ChessPiece):
 			(1, 1), 			# cond: diag. capture, desc: move diag. up-right
 			(-1, 1)				# cond: diag. capture, desc: move diag. up-left
 		]
-		self.move_x = [0, 0, 1]
-		self.move_y = [2, 1, 1] 
-		self.multiple = 1 # mult. of move_
+		#self.move_x = [0, 0, 1]
+		#self.move_y = [2, 1, 1] 
+		#self.multiple = 1 # mult. of move_
 
 
 class Rook(ChessPiece):
@@ -368,4 +417,77 @@ class King(ChessPiece):
 
 if __name__ == "__main__":
 	newGame = ChessGame()
+
+
+	newGame.test()
+
+
 	#newGame.playGame()
+	
+	test_board1 = """
+			   7    6    5    4    3    2    1    0
+			+----+----+----+----+----+----+----+----+
+		0	| 10 | 12 | 10 | 12 | 10 | 12 | 10 | 12 |
+			+----+----+----+----+----+----+----+----+
+		1	| 12 | 15 | 12 | 15 | 12 | 15 | 12 | 15 |
+			+----+----+----+----+----+----+----+----+
+		2	| 10 | 12 | 10 | 12 | 10 | 12 | 10 | 12 |
+			+----+----+----+----+----+----+----+----+
+		3	| 12 | 15 | 12 | 15 | 12 | 15 | 12 | 15 |
+			+----+----+----+----+----+----+----+----+
+		4	| 12 | 15 | 12 | 15 |  0 | 15 | 12 | 15 |
+			+----+----+----+----+----+----+----+----+
+		5	| 12 | 15 | 12 | 15 | 12 | 15 | 12 | 15 |
+			+----+----+----+----+----+----+----+----+
+		6	| 12 | 15 | 12 | 15 | 12 | 15 | 12 | 15 |
+			+----+----+----+----+----+----+----+----+
+		7	| 12 | 15 | 12 | 15 | 12 | 15 | 12 | 15 |
+			+----+----+----+----+----+----+----+----+
+			   7    6    5    4    3    2    1    0
+	"""
+
+	test_board2 = """
+		     0        1        2        3        4        5        6        7	
+
+		+--------+--------+--------+--------+--------+--------+--------+--------+
+		|        |        |        |        |        |        |        |        |
+	7	|   10   |   12   |   10   |   12   |   10   |   12   |   10   |   12   |	7
+		|        |        |        |        |        |        |        |        |
+		+--------+--------+--------+--------+--------+--------+--------+--------+	
+		|        |        |        |        |        |        |        |        |
+	6	|   10   |   12   |   10   |   12   |   10   |   12   |   10   |   12   |	6
+		|        |        |        |        |        |        |        |        |
+		+--------+--------+--------+--------+--------+--------+--------+--------+
+		|        |        |        |        |        |        |        |        |
+	5	|   10   |   12   |   10   |   12   |   10   |   12   |   10   |   12   |	5
+		|        |        |        |        |        |        |        |        |
+		+--------+--------+--------+--------+--------+--------+--------+--------+
+		|        |        |        |        |        |        |        |        |
+	4	|   10   |   12   |   10   |   12   |   10   |   12   |   10   |   12   |	4
+		|        |        |        |        |        |        |        |        |
+		+--------+--------+--------+--------+--------+--------+--------+--------+
+		|        |        |        |        |        |        |        |        |
+	3	|   10   |   12   |   10   |   12   |   10   |   12   |   10   |   12   |	3
+		|        |        |        |        |        |        |        |        |
+		+--------+--------+--------+--------+--------+--------+--------+--------+
+		|        |        |        |        |        |        |        |        |
+	2	|   10   |   12   |   10   |   12   |   10   |   12   |   10   |   12   |	2
+		|        |        |        |        |        |        |        |        |
+		+--------+--------+--------+--------+--------+--------+--------+--------+
+		|        |        |        |        |        |        |        |        |
+	1	|   10   |   12   |   10   |   12   |   10   |   12   |   10   |   12   |	1
+		|        |        |        |        |        |        |        |        |
+		+--------+--------+--------+--------+--------+--------+--------+--------+
+		|        |        |        |        |        |        |        |        |
+	0	|   10   |   12   |   10   |   12   |   10   |   12   |   10   |   12   |	0
+		|        |        |        |        |        |        |        |        |
+		+--------+--------+--------+--------+--------+--------+--------+--------+
+
+		     0        1        2        3        4        5        6        7	
+"""
+"""
+	print test_board1
+	print
+	print test_board2
+	print
+"""
