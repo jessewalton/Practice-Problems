@@ -480,6 +480,11 @@ if __name__ == "__main__":
 	for piece in display_pieces:
 		print piece,
 	print
+
+	for i in range(9600, 9900):
+		print unichr(i)
+	print
+
 	#newGame.playGame()
 	
 	test_board1 = """
