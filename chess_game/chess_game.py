@@ -190,14 +190,33 @@ class ChessBoard(object):
 
 
 	def movePiece(self, uid, x_dest, y_dest):
-		piece = self.getPieceFromUid(uid)
-		#print "uid: %s" % uid
+		passpiece = self.getPieceFromUid(uid)
 		piece.printInfo()
-		#print "\t(%s, %s) -> (%s, %s)" % (uid)
+
+"""
+		move_list = getValidMoves(uid)
+		
+		for x, y in move_list:
+			print "x: %s, y: %s" % (x, y)
+			#if x == x_dest and y == y_dest:
+				#self.game_board[piece.x][piece.y] = 0
 
 
+	# compare current position against piece movement options generate
+	# list of all available locations that are within bounds and do
+	# not contain own team pieces
+	def getValidMoves(self, uid):
+		piece = self.getPieceFromUid(uid)
+		curr_x = piece.x
+		curr_y = piece.y
+
+		#piece.moves #holds movement tuples
+ 		
+ 		test_list = [(0, 5)] #simulate a valid move for uid #1
+ 		return test_list
 
 
+	# select piece by uid, return ChessPiece object
 	def getPieceFromUid(self, uid):
 		for piece in self.white_pieces:
 			if piece.uid == uid:
