@@ -461,12 +461,35 @@ if __name__ == "__main__":
 	newGame.test()
 
 
+	display_pieces = []
+	display_pieces.append(u'\u2654')
+	display_pieces.append(u'\u2655')
+	display_pieces.append(u'\u2656')
+	display_pieces.append(u'\u2657')
+	display_pieces.append(u'\u2658')
+	display_pieces.append(u'\u2659')
+	display_pieces.append(u'\u265A')
+	display_pieces.append(u'\u265B')
+	display_pieces.append(u'\u265C')
+	display_pieces.append(u'\u265D')
+	display_pieces.append(u'\u265E')
+	display_pieces.append(u'\u265F')
+
+
+
+	for piece in display_pieces:
+		print piece,
+	print
 	#newGame.playGame()
 	
 	test_board1 = """
+
+	+--+
+	|  |
+	+--+
 			   7    6    5    4    3    2    1    0
 			+----+----+----+----+----+----+----+----+
-		0	| 10 | 12 | 10 | 12 | 10 | 12 | 10 | 12 |
+		0	| %s | 12 | 10 | 12 | 10 | 12 | 10 | 12 |
 			+----+----+----+----+----+----+----+----+
 		1	| 12 | 15 | 12 | 15 | 12 | 15 | 12 | 15 |
 			+----+----+----+----+----+----+----+----+
@@ -483,7 +506,29 @@ if __name__ == "__main__":
 		7	| 12 | 15 | 12 | 15 | 12 | 15 | 12 | 15 |
 			+----+----+----+----+----+----+----+----+
 			   7    6    5    4    3    2    1    0
-	"""
+
+
+
+			   7    6    5    4    3    2    1    0
+			+--+--+--+--+--+--+--+--+
+		0	|%s|12|10|12|10|12|10|12|
+			+  +  +  +  +  +  +  +  +
+		1	|12|15|12|15|12|15|12|15|
+			+  +  +  +  +  +  +  +  +
+		2	|10|12|10|12|10|12|10|12|
+			+  +  +  +  +  +  +  +  +
+		3	|12|15|12|15|12|15|12|15|
+			+  +  +  +  +  +  +  +  +
+		4	|12|15|12|15| 0|15|12|15|
+			+  +  +  +  +  +  +  +  +
+		5	|12|15|12|15|12|15|12|15|
+			+  +  +  +  +  +  +  +  +
+		6	|12|15|12|15|12|15|12|15|
+			+  +  +  +  +  +  +  +  +
+		7	|12|15|12|15|12|15|12|15|
+			+--+--+--+--+--+--+--+--+
+			   7    6    5    4    3    2    1    0
+	""" % (u'\u2657', u'\u2657')
 
 	test_board2 = """
 		     0        1        2        3        4        5        6        7	
@@ -524,9 +569,10 @@ if __name__ == "__main__":
 
 		     0        1        2        3        4        5        6        7	
 """
+print test_board1
+print
 """
-	print test_board1
-	print
+	
 	print test_board2
 	print
 """
