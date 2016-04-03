@@ -193,20 +193,20 @@ class ChessBoard(object):
 		piece = self.getPieceFromUid(uid)
 		piece.printInfo()
 
-
+"""
 		move_list = getValidMoves(uid)
 		
 		for x, y in move_list:
 			print "x: %s, y: %s" % (x, y)
 			#if x == x_dest and y == y_dest:
 				#self.game_board[piece.x][piece.y] = 0
-
+"""
 
 	# compare current position against piece movement options generate
 	# list of all available locations that are within bounds and do
 	# not contain own team pieces
 	def getValidMoves(self, uid):
-		piece = self.getPieceFromUid(uid)
+		piece = getPieceFromUid(uid)
 		curr_x = piece.x
 		curr_y = piece.y
 
