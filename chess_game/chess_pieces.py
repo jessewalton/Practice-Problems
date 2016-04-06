@@ -158,3 +158,47 @@ class King(ChessPiece):
 		self.move_y = [1, 1, 0]
 		self.multiple = 1
 
+
+
+if __name__ == '__main__':
+	
+	chess_pieces = []
+
+	# init  all game pieces
+	for team in range(2):
+		for uid in range(1, 17):
+
+			print("%2s" % (uid + (team*16)), end=" ")
+
+			if (team == 0):
+				print("White", end=" ")
+			else:
+				print("Black", end=" ")
+
+
+			if (uid <= 8):
+				print("Pawn")
+				chess_pieces.append(Pawn(uid))
+
+			elif (uid == 9 or uid == 16):
+				print("Rook")
+				chess_pieces.append(Rook(uid))
+
+			elif (uid == 10 or uid == 15):
+				print("Knight")
+				chess_pieces.append(Knight(uid))
+
+			elif (uid == 11 or uid == 14):
+				print("Bishop")
+				chess_pieces.append(Bishop(uid))
+
+			elif (uid == 12):
+				print("Queen")
+				chess_pieces.append(Queen(uid))
+
+			elif (uid == 13):
+				print("King")
+				chess_pieces.append(King(uid))
+
+			else:
+				print()
