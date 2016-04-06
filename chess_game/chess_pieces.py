@@ -68,11 +68,11 @@ class ChessPiece(object):
 
 	# display info for piece
 	def printInfo(self):
-		print "%s" % self.name
-		print "\tuid: \t%s" % self.uid
-		print "\tteam: \t%s" % self.team
-		print "\tx:", self.x,
-		print "\ty:", self.y
+		print ("%s" % self.name)
+		print ("\tuid: \t%s" % self.uid)
+		print ("\tteam: \t%s" % self.team)
+		print ("\tx:", self.x, end="")
+		print ("\ty:", self.y)
 
 
 	# should be inherited by all pieces, use self.x and self.y to find current location and 
@@ -157,3 +157,4 @@ class King(ChessPiece):
 		self.move_x = [0, 1, 1]
 		self.move_y = [1, 1, 0]
 		self.multiple = 1
+

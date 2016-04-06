@@ -1,12 +1,6 @@
 #!/usr/bin/env python
 
-from chess_pieces import ChessPiece
-from chess_pieces import Pawn
-from chess_pieces import Rook
-from chess_pieces import Knight
-from chess_pieces import Bishop
-from chess_pieces import Queen
-from chess_pieces import King
+from chess_pieces import *
 
 """ 
 	Class: 	ChessGame 
@@ -23,7 +17,7 @@ class ChessGame(object):
 		# define instance variables
 		self.turn = 0		# 0 = White
 		self.checkmate = False
-		self.player = ["White", "Black"]
+		self.player = ['White','Black']
 
 		# create chess board
 		self.chess_board = ChessBoard() 
@@ -42,43 +36,43 @@ class ChessGame(object):
 # public 
 
 	def test(self):
-		print "self.chess_board.white_pieces[0].printInfo():"
+		print ("self.chess_board.white_pieces[0].printInfo():")
 		self.chess_board.white_pieces[0].printInfo()
 
-		print "select piece to move using uid, resolve piece and print info"
+		print ("select piece to move using uid, resolve piece and print info")
 		self.chess_board.movePiece(1, 0, 5)
 
-		print "\nBoard after move:"
+		print ("\nBoard after move:")
 		self.chess_board.printBoard()
 
-		"""
-		print "self.chess_board.white_pieces[0].movePiece(0, 5):"
+		'''
+		print ("self.chess_board.white_pieces[0].movePiece(0, 5):")
 		self.chess_board.white_pieces[0].movePiece(0, 5)
 
-		print "self.chess_board.white_pieces[0].printInfo():"
+		print ("self.chess_board.white_pieces[0].printInfo():")
 		self.chess_board.white_pieces[0].printInfo()
 
-		print "\nBoard after move:"
+		print ("\nBoard after move:")
 		self.chess_board.printBoard()
-		"""
+		'''
 
 	# handles player turns and input
 	def playGame(self):
-		print "Begin Game"
+		print ("Begin Game")
 
 		while(self.checkmate != True):
 			
 			# determine turn
-			print "Begin %s Turn" % self.player[self.turn]
+			print("Begin %s Turn" % (self.player[self.turn]))
 
-			#piece_uid = raw_input("Select Piece: ")
-			#print "piece: ", piece_uid
-			#print "selected %s @ [%s][%s]" % (self.white_pieces[piece_uid], self.white_pieces[piece_uid].x, self.white_pieces[piece_uid].y)
+			#piece_uid = raw_input("Select Piece:")
+			#print ("piece:", piece_uid
+			#print ("selected %s @ [%s][%s]" % (self.white_pieces[piece_uid], self.white_pieces[piece_uid].x, self.white_pieces[piece_uid].y)
 
-			#move = raw_input("Enter destination: ")
-			#print "move to %s" % move
+			#move = raw_input("Enter destination:")
+			#print ("move to %s" % move
 
-			""" 
+			'''
 			Player Turn:
 				Select Piece (by uid)
 					a. select destination (by x, y)
@@ -90,18 +84,16 @@ class ChessGame(object):
 				Switch to other player
 				End Turn
 
-			"""
-
-
+			'''
 		
 			if (self.__isCheckmate()):
 				break
 
 			self.__togglePlayer()
 
-		print "Checkmate!"
-		print "%s Player Wins!" % self.player[self.turn]
-		print "Game Over"
+		print ("Checkmate!")
+		print ("%s Player Wins!" % self.player[self.turn])
+		print ("Game Over")
 	
 
 
@@ -118,7 +110,7 @@ class ChessBoard(object):
 	num_pieces = BOARD_SIZE * 2
 	white_uid_range = range(1, 16)
 	black_uid_range = range(17, 32)
-	player = ["White", "Black"]
+	player = ['White', 'Black']
 
 	def __init__(self):
 
@@ -138,7 +130,7 @@ class ChessBoard(object):
 
 	# reset board
 	def __clearBoard(self):
-		print "clearBoard()"	#debug
+		print ("clearBoard()")	#debug
 		for y in range(0, 8):
 			new_row = []
 			for x in range(0, 8):
@@ -150,11 +142,11 @@ class ChessBoard(object):
 	# put piece uid in x, y location
 	def __setBoard(self):
 		debug = True
-		print "setBoard()" 
+		print ("setBoard()") 
 		for piece in self.white_pieces:
 
 			# debug print statement
-			#print "Board[%s][%s] -> %s %s" % (piece.x, piece.y, self.player[piece.team], piece.name)
+			#print ("Board[%s][%s] -> %s %s" % (piece.x, piece.y, self.player[piece.team], piece.name)
 			
 			# assign piece uid to board location, should this be the ChessPiece obj?
 			self.game_board[piece.y][piece.x] = piece.uid
@@ -163,7 +155,7 @@ class ChessBoard(object):
 
 	# reset pieces
 	def __resetPieces(self):
-		print "resetPieces()" 	#debug
+		print ("resetPieces()") 	#debug
 
 		self.white_pieces.append( Pawn(1) ) 
 		self.white_pieces.append( Pawn(2) )
@@ -184,7 +176,7 @@ class ChessBoard(object):
 		self.white_pieces.append( Rook(16) )
 		
 
-		print "White Pieces"
+		print ("White Pieces")
 		for piece in self.white_pieces:
 			piece.printInfo()
 
@@ -193,7 +185,7 @@ class ChessBoard(object):
 
 
 	def __isCheckmate(self):
-		print "isCheckmate()" 	#debug
+		print ("isCheckmate()") 	#debug
 		if (True):
 			return True
 
@@ -212,7 +204,7 @@ class ChessBoard(object):
 			if x_dest == x_avail and y_dest == y_avail:
 
 				# remove piece from current location
-				print "remove piece from (%s, %s)" % (piece.x, piece.y)
+				print ("remove piece from (%s, %s)" % (piece.x, piece.y))
 				self.game_board[piece.y][piece.x] = 0
 
 				# remove any pieces at destination
@@ -256,47 +248,45 @@ class ChessBoard(object):
 
 	def printBoard(self):
 
-		print "\nGame Board - White\n"
+		print ("\nGame Board - White\n")
 
 		# print col header
-		print "\t\t",
+		print ("\t\t", end="")
 		for col in range(0, 8):
-			print " {%s}" % col,
-		print "\n"
+			print (" {%s}" % col, end="")
+		print ("\n")
 
 		# print board
 		for row in range(0, 8):
 
 			# row header
-			print "\t  {%s} " % row,
+			print ("\t  {%s}" % row, end="")
 
 			# col values
 			for col in range(0, 8):
-				print "%4s" % self.game_board[row][col], 
+				print ("%4s" % self.game_board[row][col], end="")
 
-			print "\n"
+			print ("\n")
 
-		print "\nGame Board - Black\n"
+		print ("\nGame Board - Black\n")
 
 		# print col header
-		print "\t\t",
+		print ("\t\t", end="")
 		for col in range(7, -1, -1):
-			print " {%s}" % col,
-		print "\n"
+			print (" {%s}" % col, end="")
+		print ("\n")
 
 		# print board
 		for row in range(8, 0, -1):
 
 			# row header
-			print "\t  {%s} " % (row-1),
+			print ("\t  {%s}" % (row-1), end="")
 
 			# col values
 			for col in range(8, 0, -1):
-				print "%4s" % self.game_board[row-1][col-1],
+				print ("%4s" % self.game_board[row-1][col-1], end="")
 
-			print "\n"
-
-
+			print ("\n")
 
 
 
@@ -306,7 +296,9 @@ class ChessBoard(object):
 
 
 
-if __name__ == "__main__":
+
+
+if __name__ == '__main__':
 	newGame = ChessGame()
 
 
@@ -330,12 +322,12 @@ if __name__ == "__main__":
 
 
 	for piece in display_pieces:
-		print piece,
+		print (piece, end="")
 	print
 
-	print "Display pieces using unichr()"
+	print ("Display pieces using unichr()")
 	for i in range(9812, 9835):
-		print i, unichr(i)
+		print (i, unichr(i))
 	print
 
 	#newGame.playGame()
@@ -427,8 +419,8 @@ if __name__ == "__main__":
 
 		     0        1        2        3        4        5        6        7	
 """
-print test_board1
-print
+print (test_board1)
+print()
 """
 	
 	print test_board2
