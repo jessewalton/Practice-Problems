@@ -117,6 +117,7 @@ class ChessBoard(object):
 		# define instance variables
 		self.turn = 0 		# 0 = white, 1 = black
 		self.checkmate = False
+		self.all_pieces = []
 		self.white_pieces = []
 		self.black_pieces = []
 		self.game_board = []	# might be easier to have pieces on separate
@@ -156,6 +157,30 @@ class ChessBoard(object):
 	# reset pieces
 	def __resetPieces(self):
 		print ("resetPieces()") 	#debug
+
+
+		new_piece = None
+
+		for team in [0, 1]:
+			for count in range(1, 17):
+				offset = team * 16
+
+				if count <= 8:
+					new_piece = Pawn(count + offset)
+				elif count == 9 or count == 16:
+					new_piece = Rook(count + offset)
+				elif count == 10 or count == 15:
+					new_piece = Knight(count + offset)
+				elif count == 11 or count == 14:
+					new_piece = Bishop(count + offset)
+				elif count == 12:
+					new_piece = Queen(count + offset)
+				elif count == 13:
+					new_piece = King(count + offset)
+
+				self.all_pieces.append(new_piece)
+
+
 
 		self.white_pieces.append( Pawn(1) ) 
 		self.white_pieces.append( Pawn(2) )
