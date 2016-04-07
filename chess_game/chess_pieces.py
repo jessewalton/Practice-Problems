@@ -164,7 +164,7 @@ if __name__ == '__main__':
 	
 	chess_pieces = []
 
-	# init  all game pieces
+	# init all game pieces
 	for team in range(2):
 		for uid in range(1, 17):
 
@@ -202,3 +202,12 @@ if __name__ == '__main__':
 
 			else:
 				print()
+
+	for piece in chess_pieces:
+		piece.printInfo()
+
+	temp = chess_pieces.pop(30)
+	chess_pieces.insert(30, temp)
+
+	for piece in chess_pieces:
+		piece.printInfo()
