@@ -36,21 +36,32 @@ class ChessGame(object):
 # public 
 
 	def test(self):
-		print ("self.chess_board.white_pieces[0].printInfo():")
-		self.chess_board.white_pieces[0].printInfo()
+		"""
+		# test move by uid
+		print ("self.chess_board.all_pieces[0].printInfo():")
+		self.chess_board.all_pieces[0].printInfo()
 
 		print ("select piece to move using uid, resolve piece and print info")
-		self.chess_board.movePiece(1, 0, 5)
+		self.chess_board.movePieceByUID(1, 0, 5)
 
 		print ("\nBoard after move:")
 		self.chess_board.printBoard()
+		"""
+
+		# test move by origin coords
+	
+		self.chess_board.printBoard()
+		print("Move UID 8 from (7,6) to (7,4)")
+		self.chess_board.movePieceByOrigin(7,6,7,4)
+
+		self.chess_board.printBoard()
 
 		'''
-		print ("self.chess_board.white_pieces[0].movePiece(0, 5):")
-		self.chess_board.white_pieces[0].movePiece(0, 5)
+		print ("self.chess_board.all_pieces[0].movePieceByUID(0, 5):")
+		self.chess_board.all_pieces[0].movePieceByUID(0, 5)
 
-		print ("self.chess_board.white_pieces[0].printInfo():")
-		self.chess_board.white_pieces[0].printInfo()
+		print ("self.chess_board.all_pieces[0].printInfo():")
+		self.chess_board.all_pieces[0].printInfo()
 
 		print ("\nBoard after move:")
 		self.chess_board.printBoard()
@@ -67,7 +78,7 @@ class ChessGame(object):
 
 			#piece_uid = raw_input("Select Piece:")
 			#print ("piece:", piece_uid
-			#print ("selected %s @ [%s][%s]" % (self.white_pieces[piece_uid], self.white_pieces[piece_uid].x, self.white_pieces[piece_uid].y)
+			#print ("selected %s @ [%s][%s]" % (self.all_pieces[piece_uid], self.all_pieces[piece_uid].x, self.all_pieces[piece_uid].y)
 
 			#move = raw_input("Enter destination:")
 			#print ("move to %s" % move
@@ -112,39 +123,42 @@ class ChessBoard(object):
 	black_uid_range = range(17, 32)
 	player = ['White', 'Black']
 
+	# initialize 
+		# __initBoard()
+		# __resetPieces()
+		# __setBoard()
 	def __init__(self):
 
 		# define instance variables
 		self.turn = 0 		# 0 = white, 1 = black
 		self.checkmate = False
 		self.all_pieces = []
-		self.white_pieces = []
+		self.all_pieces = []
 		self.black_pieces = []
 		self.game_board = []	# might be easier to have pieces on separate
 								# boards for movement/ capture checking?
 
 		# initialize board
-		self.__clearBoard()
+		self.__initBoard()
 		self.__resetPieces()
 		self.__setBoard()
 		
 
 	# reset board
-	def __clearBoard(self):
+	def __initBoard(self):
 		print ("clearBoard()")	#debug
 		for y in range(0, 8):
 			new_row = []
 			for x in range(0, 8):
 				new_row.append(0)
 			self.game_board.append(new_row)
-		self.printBoard() #debug
 
 
 	# put piece uid in x, y location
 	def __setBoard(self):
 		debug = True
 		print ("setBoard()") 
-		for piece in self.white_pieces:
+		for piece in self.all_pieces:
 
 			# debug print statement
 			#print ("Board[%s][%s] -> %s %s" % (piece.x, piece.y, self.player[piece.team], piece.name)
@@ -154,16 +168,15 @@ class ChessBoard(object):
 		self.printBoard() #debug
 
 
-	# reset pieces
+	# initialize all_pieces list 
 	def __resetPieces(self):
 		print ("resetPieces()") 	#debug
-
-
-		new_piece = None
-
+		
 		for team in [0, 1]:
+			offset = team * 16
 			for count in range(1, 17):
-				offset = team * 16
+				new_piece = None
+				
 
 				if count <= 8:
 					new_piece = Pawn(count + offset)
@@ -177,36 +190,14 @@ class ChessBoard(object):
 					new_piece = Queen(count + offset)
 				elif count == 13:
 					new_piece = King(count + offset)
+				else:
+					print("ERROR")
 
 				self.all_pieces.append(new_piece)
 
+				#print("(%s, %s) -> %s %s" % (new_piece.x, new_piece.y, self.player[team], new_piece.name))
 
 
-		self.white_pieces.append( Pawn(1) ) 
-		self.white_pieces.append( Pawn(2) )
-		self.white_pieces.append( Pawn(3) )
-		self.white_pieces.append( Pawn(4) )
-		self.white_pieces.append( Pawn(5) )
-		self.white_pieces.append( Pawn(6) )
-		self.white_pieces.append( Pawn(7) )
-		self.white_pieces.append( Pawn(8) )
-		
-		self.white_pieces.append( Rook(9) )
-		self.white_pieces.append( Knight(10) )
-		self.white_pieces.append( Bishop(11) )
-		self.white_pieces.append( Queen(12) )
-		self.white_pieces.append( King(13) )
-		self.white_pieces.append( Bishop(14) )
-		self.white_pieces.append( Knight(15) )
-		self.white_pieces.append( Rook(16) )
-		
-
-		print ("White Pieces")
-		for piece in self.white_pieces:
-			piece.printInfo()
-
-		#for uid in range(self.BOARD_SIZE * 2, ):
-		#	self.white_pieces[uid] = uid + 1
 
 
 	def __isCheckmate(self):
@@ -215,8 +206,8 @@ class ChessBoard(object):
 			return True
 
 
-	def movePiece(self, uid, x_dest, y_dest):
-		piece = self.getPieceFromUid(uid)
+	def movePieceByOrigin(self, x_start, y_start, x_dest, y_dest):
+		piece = self.game_board[y_start][x_start]
 		piece.printInfo()
 
 		# get all available moves
@@ -238,7 +229,34 @@ class ChessBoard(object):
 				# move piece to destination
 				self.game_board[y_dest][x_dest] = piece.uid
 
-			print
+			print("")
+
+
+
+	def movePieceByUID(self, uid, x_dest, y_dest):
+		piece = self.getPieceFromUid(uid)
+		#piece.printInfo()
+
+		# get all available moves
+		move_list = self.getValidMoves(uid)
+		
+		# go through each tuple in move_list
+		for x_avail, y_avail in move_list:
+
+			# check if desired destination is in list of available destinations
+			if x_dest == x_avail and y_dest == y_avail:
+
+				# remove piece from current location
+				print ("remove piece from (%s, %s)" % (piece.x, piece.y))
+				self.game_board[piece.y][piece.x] = 0
+
+				# remove any pieces at destination
+				self.game_board[y_dest][x_dest] = 0
+
+				# move piece to destination
+				self.game_board[y_dest][x_dest] = piece.uid
+
+			print("")
 		
 
 
@@ -261,14 +279,9 @@ class ChessBoard(object):
 
 	# select piece by uid, return ChessPiece object
 	def getPieceFromUid(self, uid):
-		for piece in self.white_pieces:
+		for piece in self.all_pieces:
 			if piece.uid == uid:
 				return piece
-
-		for piece in self.black_pieces:
-			if piece.uid == uid:
-				return piece
- 		
 
 
 	def printBoard(self):
@@ -329,7 +342,7 @@ if __name__ == '__main__':
 
 	newGame.test()
 
-
+	"""
 	display_pieces = []
 	display_pieces.append(u'\u2654')
 	display_pieces.append(u'\u2655')
@@ -343,111 +356,17 @@ if __name__ == '__main__':
 	display_pieces.append(u'\u265D')
 	display_pieces.append(u'\u265E')
 	display_pieces.append(u'\u265F')
+	"""
 
 
+	#for piece in display_pieces:
+		#print (unichr(piece), end="")
+	#print
 
-	for piece in display_pieces:
-		print (piece, end="")
-	print
-
+	"""	
 	print ("Display pieces using unichr()")
 	for i in range(9812, 9835):
-		print (i, unichr(i))
-	print
+		print (chr(i) )
+	"""
 
 	#newGame.playGame()
-	
-	test_board1 = """
-
-	+--+
-	|  |
-	+--+
-			   7    6    5    4    3    2    1    0
-			+----+----+----+----+----+----+----+----+
-		0	| %s | 12 | 10 | 12 | 10 | 12 | 10 | 12 |
-			+----+----+----+----+----+----+----+----+
-		1	| 12 | 15 | 12 | 15 | 12 | 15 | 12 | 15 |
-			+----+----+----+----+----+----+----+----+
-		2	| 10 | 12 | 10 | 12 | 10 | 12 | 10 | 12 |
-			+----+----+----+----+----+----+----+----+
-		3	| 12 | 15 | 12 | 15 | 12 | 15 | 12 | 15 |
-			+----+----+----+----+----+----+----+----+
-		4	| 12 | 15 | 12 | 15 |  0 | 15 | 12 | 15 |
-			+----+----+----+----+----+----+----+----+
-		5	| 12 | 15 | 12 | 15 | 12 | 15 | 12 | 15 |
-			+----+----+----+----+----+----+----+----+
-		6	| 12 | 15 | 12 | 15 | 12 | 15 | 12 | 15 |
-			+----+----+----+----+----+----+----+----+
-		7	| 12 | 15 | 12 | 15 | 12 | 15 | 12 | 15 |
-			+----+----+----+----+----+----+----+----+
-			   7    6    5    4    3    2    1    0
-
-
-
-			   7    6    5    4    3    2    1    0
-			+--+--+--+--+--+--+--+--+
-		0	|%s|12|10|12|10|12|10|12|
-			+  +  +  +  +  +  +  +  +
-		1	|12|15|12|15|12|15|12|15|
-			+  +  +  +  +  +  +  +  +
-		2	|10|12|10|12|10|12|10|12|
-			+  +  +  +  +  +  +  +  +
-		3	|12|15|12|15|12|15|12|15|
-			+  +  +  +  +  +  +  +  +
-		4	|12|15|12|15| 0|15|12|15|
-			+  +  +  +  +  +  +  +  +
-		5	|12|15|12|15|12|15|12|15|
-			+  +  +  +  +  +  +  +  +
-		6	|12|15|12|15|12|15|12|15|
-			+  +  +  +  +  +  +  +  +
-		7	|12|15|12|15|12|15|12|15|
-			+--+--+--+--+--+--+--+--+
-			   7    6    5    4    3    2    1    0
-	""" % (u'\u2657', u'\u2657')
-
-	test_board2 = """
-		     0        1        2        3        4        5        6        7	
-
-		+--------+--------+--------+--------+--------+--------+--------+--------+
-		|        |        |        |        |        |        |        |        |
-	7	|   10   |   12   |   10   |   12   |   10   |   12   |   10   |   12   |	7
-		|        |        |        |        |        |        |        |        |
-		+--------+--------+--------+--------+--------+--------+--------+--------+	
-		|        |        |        |        |        |        |        |        |
-	6	|   10   |   12   |   10   |   12   |   10   |   12   |   10   |   12   |	6
-		|        |        |        |        |        |        |        |        |
-		+--------+--------+--------+--------+--------+--------+--------+--------+
-		|        |        |        |        |        |        |        |        |
-	5	|   10   |   12   |   10   |   12   |   10   |   12   |   10   |   12   |	5
-		|        |        |        |        |        |        |        |        |
-		+--------+--------+--------+--------+--------+--------+--------+--------+
-		|        |        |        |        |        |        |        |        |
-	4	|   10   |   12   |   10   |   12   |   10   |   12   |   10   |   12   |	4
-		|        |        |        |        |        |        |        |        |
-		+--------+--------+--------+--------+--------+--------+--------+--------+
-		|        |        |        |        |        |        |        |        |
-	3	|   10   |   12   |   10   |   12   |   10   |   12   |   10   |   12   |	3
-		|        |        |        |        |        |        |        |        |
-		+--------+--------+--------+--------+--------+--------+--------+--------+
-		|        |        |        |        |        |        |        |        |
-	2	|   10   |   12   |   10   |   12   |   10   |   12   |   10   |   12   |	2
-		|        |        |        |        |        |        |        |        |
-		+--------+--------+--------+--------+--------+--------+--------+--------+
-		|        |        |        |        |        |        |        |        |
-	1	|   10   |   12   |   10   |   12   |   10   |   12   |   10   |   12   |	1
-		|        |        |        |        |        |        |        |        |
-		+--------+--------+--------+--------+--------+--------+--------+--------+
-		|        |        |        |        |        |        |        |        |
-	0	|   10   |   12   |   10   |   12   |   10   |   12   |   10   |   12   |	0
-		|        |        |        |        |        |        |        |        |
-		+--------+--------+--------+--------+--------+--------+--------+--------+
-
-		     0        1        2        3        4        5        6        7	
-"""
-print (test_board1)
-print()
-"""
-	
-	print test_board2
-	print
-"""
