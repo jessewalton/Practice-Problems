@@ -7,6 +7,8 @@
 
 """
 class ChessPiece(object):
+	BOARD_SIZE = 8
+
 	PAWN 	 = 8
 	ROOK_L 	 = 9
 	KNIGHT_L = 10
@@ -29,64 +31,71 @@ class ChessPiece(object):
 
 		
 		# assign team
-		if uid <= 16:
+		if uid < 17:
 			self.team = 0 #white
 		else:
 			self.team = 1 #black
 		
+
 		# normalize value for both teams
-		piece_type = uid % 17
+		piece_type = ((uid-1) % 16) + 1
+		print("piece_type: %s\tuid: %s" % (piece_type, uid))
 
+		
 		# initialize piece location
-
-		if piece_type 	<= 	PAWN: 			# pawns
-			self.x = 	uid - 1 
+		if piece_type  	<= 	self.PAWN: 			# pawns
+			self.x = 	piece_type - 1
 			self.y = 	6
 			self.name = "Pawn"
 
-		elif piece_type == 	ROOK_L:			# rook
-			self.x = 	uid - 9
+		elif piece_type == 	self.ROOK_L:		# rook
+			self.x = 	piece_type - 9
 			self.y = 	7
 			self.name = "Rook"
 
-		elif piece_type == 	KNIGHT_L:		# knight
-			self.x = 	uid - 9
+		elif piece_type == 	self.KNIGHT_L:		# knight
+			self.x = 	piece_type - 9
 			self.y = 	7
 			self.name = "Knight"
 
-		elif piece_type == 	BISHOP_L:		# bishop
-			self.x = 	uid - 9
+		elif piece_type == 	self.BISHOP_L:		# bishop
+			self.x = 	piece_type - 9
 			self.y = 	7
 			self.name = "Bishop"
 
-		elif piece_type == 	QUEEN:			# queen
+		elif piece_type == 	self.QUEEN:			# queen
 			self.x = 	3
 			self.y = 	7
 			self.name = "Queen"
 
-		elif piece_type == 	KING:			# king
+		elif piece_type == 	self.KING:			# king
 			self.x = 	4
 			self.y = 	7
 			self.name = "King"
 
-		elif piece_type == 	BISHOP_R:		# bishop
-			self.x = 	uid - 9	
+		elif piece_type == 	self.BISHOP_R:		# bishop
+			self.x = 	piece_type - 9	
 			self.y = 	7
 			self.name = "Bishop"
 
-		elif piece_type == 	KNIGHT_R:		# knight
-			self.x = 	uid - 9
+		elif piece_type == 	self.KNIGHT_R:		# knight
+			self.x = 	piece_type - 9
 			self.y = 	7
 			self.name = "Knight"
 
-		elif piece_type == 	ROOK_R:			# rook
-			self.x = 	uid - 9
+		elif piece_type == 	self.ROOK_R:			# rook
+			self.x = 	piece_type - 9
 			self.y = 	7
 			self.name = "Rook"
 
 		else:
-			print("Error")
+			print("Error: Coordinates not set")
 
+
+		# invert coords if on black
+		self.x = abs(self.x - (self.team * (self.BOARD_SIZE - 1)) )
+		self.y = abs(self.y - (self.team * (self.BOARD_SIZE - 1)) )
+		
 
 	# display info for piece
 	def printInfo(self):
@@ -184,56 +193,61 @@ class King(ChessPiece):
 
 if __name__ == '__main__':
 
-	"""
+	
 
 	chess_pieces = []
 
 	# init all game pieces
-	for team in range(2):
-		for uid in range(1, 17):
+	#for team in range(2):
 
-			print("%2s" % (uid + (team*16)), end=" ")
+	for uid in range(1, 33):
 
-			if (team == 0):
-				print("White", end=" ")
-			else:
-				print("Black", end=" ")
+		if (uid < 17):
+			print("White", end=" ")
+		else:
+			print("Black", end=" ")
+
+		print("%2s" % (uid), end=" ")
+		print("")
 
 
-			if (uid <= 8):
-				print("Pawn")
-				chess_pieces.append(Pawn(uid))
+		piece_type = ((uid-1) % 16) + 1
 
-			elif (uid == 9 or uid == 16):
-				print("Rook")
-				chess_pieces.append(Rook(uid))
+		if (piece_type <= 8):
+			#print("Pawn")
+			chess_pieces.append(Pawn(uid))
+		
+		elif (piece_type == 9 or uid == 16):
+			#print("Rook")
+			chess_pieces.append(Rook(uid))
 
-			elif (uid == 10 or uid == 15):
-				print("Knight")
-				chess_pieces.append(Knight(uid))
+		elif (piece_type == 10 or uid == 15):
+			#print("Knight")
+			chess_pieces.append(Knight(uid))
 
-			elif (uid == 11 or uid == 14):
-				print("Bishop")
-				chess_pieces.append(Bishop(uid))
+		elif (piece_type == 11 or uid == 14):
+			#print("Bishop")
+			chess_pieces.append(Bishop(uid))
 
-			elif (uid == 12):
-				print("Queen")
-				chess_pieces.append(Queen(uid))
+		elif (piece_type == 12):
+			#print("Queen")
+			chess_pieces.append(Queen(uid))
 
-			elif (uid == 13):
-				print("King")
-				chess_pieces.append(King(uid))
+		elif (piece_type == 13):
+			#print("King")
+			chess_pieces.append(King(uid))
 
-			else:
-				print()
+		else:
+			print("Error: Piece not created")
+
+
 
 	for piece in chess_pieces:
 		piece.printInfo()
 
-	temp = chess_pieces.pop(30)
-	chess_pieces.insert(30, temp)
+	#temp = chess_pieces.pop(30)
+	#chess_pieces.insert(30, temp)
 
-	for piece in chess_pieces:
-		piece.printInfo()
-
-	"""
+	#for piece in chess_pieces:
+	#	piece.printInfo()
+	
