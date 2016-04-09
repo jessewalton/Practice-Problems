@@ -7,6 +7,16 @@
 
 """
 class ChessPiece(object):
+	PAWN 	 = 8
+	ROOK_L 	 = 9
+	KNIGHT_L = 10
+	BISHOP_L = 11
+	QUEEN 	 = 12
+	KING 	 = 13
+	BISHOP_R = 14
+	KNIGHT_R = 15
+	ROOK_R 	 = 16
+
 
 	def __init__(self, uid):
 		self.uid = uid
@@ -24,46 +34,58 @@ class ChessPiece(object):
 		else:
 			self.team = 1 #black
 		
+		# normalize value for both teams
+		piece_type = uid % 17
 
-		# initialize location
-		if uid <= 16: 				# white team
-			if uid <= 8: 					# pawns
-				#print "Pawn", 
-				self.x = uid - 1 
-				self.y = 6
-				self.name = "Pawn"
-			elif uid == 9 or uid == 16:		# rooks
-				#print "Rook", 
-				self.x = uid - 9
-				self.y = 7
-				self.name = "Rook"
-			elif uid == 10 or uid == 15:	# knights
-				#print "Knight", 
-				self.x = uid - 9
-				self.y = 7
-				self.name = "Knight"
-			elif uid == 11 or uid == 14:	# bishops
-				#print "Bishop", 
-				self.x = uid - 9
-				self.y = 7
-				self.name = "Bishop"
-			elif uid == 12:					# queen
-				#print "Queen", 
-				self.x = 3
-				self.y = 7
-				self.name = "Queen"
-			else:							# king
-				#print "King", 
-				self.x = 4
-				self.y = 7
-				self.name = "King"
+		# initialize piece location
 
-			#self.game_board[self.x][self.y] = uid
-			#print "Created"
-				
+		if piece_type 	<= 	PAWN: 			# pawns
+			self.x = 	uid - 1 
+			self.y = 	6
+			self.name = "Pawn"
 
-		else:				# black team
-			pass
+		elif piece_type == 	ROOK_L:			# rook
+			self.x = 	uid - 9
+			self.y = 	7
+			self.name = "Rook"
+
+		elif piece_type == 	KNIGHT_L:		# knight
+			self.x = 	uid - 9
+			self.y = 	7
+			self.name = "Knight"
+
+		elif piece_type == 	BISHOP_L:		# bishop
+			self.x = 	uid - 9
+			self.y = 	7
+			self.name = "Bishop"
+
+		elif piece_type == 	QUEEN:			# queen
+			self.x = 	3
+			self.y = 	7
+			self.name = "Queen"
+
+		elif piece_type == 	KING:			# king
+			self.x = 	4
+			self.y = 	7
+			self.name = "King"
+
+		elif piece_type == 	BISHOP_R:		# bishop
+			self.x = 	uid - 9	
+			self.y = 	7
+			self.name = "Bishop"
+
+		elif piece_type == 	KNIGHT_R:		# knight
+			self.x = 	uid - 9
+			self.y = 	7
+			self.name = "Knight"
+
+		elif piece_type == 	ROOK_R:			# rook
+			self.x = 	uid - 9
+			self.y = 	7
+			self.name = "Rook"
+
+		else:
+			print("Error")
 
 
 	# display info for piece
@@ -109,7 +131,7 @@ class Pawn(ChessPiece):
 		first_move = False		#toggle to true when piece is moved for first time
 		self.moves = [	 		# valid coord move offset from current position
 			(0, 2), 			# cond: first move only, desc: move forward two spaces
-			(0, 1), 			# cond: only if no pieces can be captured diag., desc: move forward one space
+			(0, 1), 			# cond: no diag cap., desc: move forward one space
 			(1, 1), 			# cond: diag. capture, desc: move diag. up-right
 			(-1, 1)				# cond: diag. capture, desc: move diag. up-left
 		]
@@ -161,7 +183,9 @@ class King(ChessPiece):
 
 
 if __name__ == '__main__':
-	
+
+	"""
+
 	chess_pieces = []
 
 	# init all game pieces
@@ -211,3 +235,5 @@ if __name__ == '__main__':
 
 	for piece in chess_pieces:
 		piece.printInfo()
+
+	"""
