@@ -141,9 +141,9 @@ class Pawn(ChessPiece):
 		super(Pawn, self).__init__(uid)
 		self.multiple = 1
 		self.moves = [	 		# valid coord move offset from current position
-			(0, 2), 			# cond: first move only, desc: move forward two spaces
-			(0, 1), 			# cond: no diag cap., desc: move forward one space
-			(1, 1), 			# cond: diag. capture, desc: move diag. up-right
+			( 0, 2), 			# cond: first move only, desc: move forward two spaces
+			( 0, 1), 			# cond: no diag cap., desc: move forward one space
+			( 1, 1), 			# cond: diag. capture, desc: move diag. up-right
 			(-1, 1)				# cond: diag. capture, desc: move diag. up-left
 		]
 
@@ -153,10 +153,10 @@ class Rook(ChessPiece):
 		super(Rook, self).__init__(uid)
 		self.multiple = 7
 		self.moves = [
-			(0, 1),
-			(1, 0),
-			(0, -1),
-			(-1, 0)
+			( 0,  1),
+			( 1,  0),
+			( 0, -1),
+			(-1,  0)
 		]
 
 
@@ -165,43 +165,55 @@ class Knight(ChessPiece):
 		super(Knight, self).__init__(uid)
 		self.multiple = 1
 		self.moves = [
-			(1, 2),
-			(1, -2),
-			(-1, 2),
+			( 1,  2),
+			( 1, -2),
+			(-1,  2),
 			(-1, -2),
-
-			(2, 1),
-			(2, -1),
-			(-2, 1),
+			( 2,  1),
+			( 2, -1),
+			(-2,  1),
 			(-2, -1)
 		]
-		self.move_x = [2, 1]
-		self.move_y = [1, 2]
-		self.multiple = 1
 
 
 class Bishop(ChessPiece):
 	def __init__(self, uid):
 		super(Bishop, self).__init__(uid)
-		self.move_x = [1]
-		self.move_y = [1]
 		self.multiple = 7
-
+		self.moves = [
+			( 1,  1),
+			( 1, -1),
+			(-1,  1),
+			(-1, -1)
+		]
 
 class Queen(ChessPiece):
 	def __init__(self, uid):
 		super(Queen, self).__init__(uid)
-		self.move_x = [0, 1, 1] # vertical, diagnal, horizontal
-		self.move_y = [1, 1, 0]
 		self.multiple = 7
+		self.moves = [
+			( 0,  1),
+			( 1,  0),
+			( 0, -1),
+			(-1,  0),
+			( 1,  1),
+			( 1, -1),
+			(-1,  1),
+			(-1, -1)
+		]
 
 
 class King(ChessPiece):
 	def __init__(self, uid):
 		super(King, self).__init__(uid)
-		self.move_x = [0, 1, 1]
-		self.move_y = [1, 1, 0]
 		self.multiple = 1
+		self.moves = [
+			( 0,  1),
+			( 1,  0),
+			( 0, -1),
+			(-1,  0)
+		]
+
 
 
 # init all game pieces, return as list
