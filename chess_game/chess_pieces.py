@@ -221,7 +221,7 @@ def createPieces():
 	chess_pieces = []
 	
 	for uid in range(1, 33):
-		print("Current uid is: %s" % uid)
+		#print("Current uid is: %s" % uid)
 
 		piece_type = ((uid-1) % 16) + 1
 
@@ -245,9 +245,6 @@ def createPieces():
 
 		else:
 			print("Error: Piece not created (uid = %s)" % uid)
-
-	for piece in chess_pieces:
-		piece.printInfo()
 
 	return chess_pieces
 
