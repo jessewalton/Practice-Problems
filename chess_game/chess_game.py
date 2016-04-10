@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 
 from chess_pieces import *
+import sys
+from io import TextIOWrapper
+sys.stdout = TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
+
+
 
 """ 
 	Class: 	ChessGame 
@@ -8,20 +14,17 @@ from chess_pieces import *
 
 """
 class ChessGame(object):
+
 	'Python chess game, built from scratch by Jesse Walton'
 
-# private
-
 	def __init__(self):
-		
 		# define instance variables
 		self.turn = 0		# 0 = White
 		self.checkmate = False
 		self.player = ['White','Black']
-
 		# create chess board
 		self.chess_board = ChessBoard() 
-		#self.chess_board.
+
 
 	# toggle to next player
 	def __togglePlayer(self):
@@ -35,45 +38,11 @@ class ChessGame(object):
 
 # public 
 
-	def test(self):
-		"""
-		# test move by uid
-		print ("self.chess_board.all_pieces[0].printInfo():")
-		self.chess_board.all_pieces[0].printInfo()
-
-		print ("select piece to move using uid, resolve piece and print info")
-		self.chess_board.movePieceByUID(1, 0, 5)
-
-		print ("\nBoard after move:")
-		self.chess_board.printBoard()
-		"""
-
-		# test move by origin coords
-	
-		self.chess_board.printBoard()
-		print("Move UID 8 from (7,6) to (7,4)")
-		self.chess_board.movePieceByOrigin(7,6,7,4)
-
-		self.chess_board.printBoard()
-
-		'''
-		print ("self.chess_board.all_pieces[0].movePieceByUID(0, 5):")
-		self.chess_board.all_pieces[0].movePieceByUID(0, 5)
-
-		print ("self.chess_board.all_pieces[0].printInfo():")
-		self.chess_board.all_pieces[0].printInfo()
-
-		print ("\nBoard after move:")
-		self.chess_board.printBoard()
-		'''
-
 	# handles player turns and input
 	def playGame(self):
 		print ("Begin Game")
 
 		while(self.checkmate != True):
-			
-			# determine turn
 			print("Begin %s Turn" % (self.player[self.turn]))
 
 			#piece_uid = raw_input("Select Piece:")
@@ -108,6 +77,22 @@ class ChessGame(object):
 	
 
 
+	def test(self):
+
+		# test move
+		moveByOrigin = False
+		self.chess_board.printBoard()
+	
+		if (moveByOrigin):
+			print("Move UID 8 from (7,6) to (7,4)")
+			self.chess_board.movePieceByOrigin(7,6,7,4)
+		else:
+			print("Move UID 8 from (7,6) to (7,4)")
+			self.chess_board.movePieceByUid(8, 7, 4) 
+
+		self.chess_board.printBoard()
+
+
 
 
 
@@ -117,36 +102,38 @@ class ChessGame(object):
 
 """
 class ChessBoard(object):
+
+	# static vars
 	BOARD_SIZE = 8
 	num_pieces = BOARD_SIZE * 2
 	white_uid_range = range(1, 16)
 	black_uid_range = range(17, 32)
 	player = ['White', 'Black']
 
-	# initialize 
-		# __initBoard()
-		# __resetPieces()
-		# __setBoard()
+
+
+
+	# create board and pieces, then set board with pieces
 	def __init__(self):
 
-		# define instance variables
-		self.turn = 0 		# 0 = white, 1 = black
-		self.checkmate = False
-		self.all_pieces = []
-		self.all_pieces = []
-		self.black_pieces = []
-		self.game_board = []	# might be easier to have pieces on separate
-								# boards for movement/ capture checking?
+		# instance vars
+		self.turn 		= 	0 		# 0 = white, 1 = black
+		self.checkmate 	= 	False
+		self.all_pieces = 	[]
+		self.game_board = 	[]	
 
 		# initialize board
-		self.__initBoard()
-		self.__resetPieces()
+		self.__createBoard()
+		self.__createPieces()
 		self.__setBoard()
 		
 
-	# reset board
-	def __initBoard(self):
-		print ("clearBoard()")	#debug
+
+
+	# create 2d game board
+	def __createBoard(self):
+		print ("createBoard()")	#debug
+		self.game_board = []
 		for y in range(0, 8):
 			new_row = []
 			for x in range(0, 8):
@@ -154,29 +141,26 @@ class ChessBoard(object):
 			self.game_board.append(new_row)
 
 
-	# put piece uid in x, y location
+
+
+	# put ref to piece in x, y location
 	def __setBoard(self):
-		debug = True
 		print ("setBoard()") 
 		for piece in self.all_pieces:
-
-			# debug print statement
-			#print ("Board[%s][%s] -> %s %s" % (piece.x, piece.y, self.player[piece.team], piece.name)
-			
-			# assign piece uid to board location, should this be the ChessPiece obj?
-			self.game_board[piece.y][piece.x] = piece.uid
-		self.printBoard() #debug
-
-
-	# initialize all_pieces list 
-	def __resetPieces(self):
-		print ("resetPieces()") 	#debug
+			self.game_board[piece.y][piece.x] = piece
 		
+
+
+
+	# create all pieces, add to list
+	def __createPieces(self):
+		print("createPieces()")
+		self.all_pieces = []
+
 		for team in [0, 1]:
 			offset = team * 16
 			for count in range(1, 17):
 				new_piece = None
-				
 
 				if count <= 8:
 					new_piece = Pawn(count + offset)
@@ -194,9 +178,8 @@ class ChessBoard(object):
 					print("ERROR")
 
 				self.all_pieces.append(new_piece)
-
-				#print("(%s, %s) -> %s %s" % (new_piece.x, new_piece.y, self.player[team], new_piece.name))
-
+				#new_piece.printInfo()
+				
 
 
 
@@ -206,130 +189,165 @@ class ChessBoard(object):
 			return True
 
 
-	def movePieceByOrigin(self, x_start, y_start, x_dest, y_dest):
-		piece = self.game_board[y_start][x_start]
-		piece.printInfo()
 
-		# get all available moves
-		move_list = self.getValidMoves(uid)
-		
-		# go through each tuple in move_list
-		for x_avail, y_avail in move_list:
 
-			# check if desired destination is in list of available destinations
-			if x_dest == x_avail and y_dest == y_avail:
-
-				# remove piece from current location
-				print ("remove piece from (%s, %s)" % (piece.x, piece.y))
-				self.game_board[piece.y][piece.x] = 0
-
-				# remove any pieces at destination
-				self.game_board[y_dest][x_dest] = 0
-
-				# move piece to destination
-				self.game_board[y_dest][x_dest] = piece.uid
-
-			print("")
+	def getPieceFromCoords(self, x, y):
+		return self.game_board[y][x]
 
 
 
-	def movePieceByUID(self, uid, x_dest, y_dest):
-		piece = self.getPieceFromUid(uid)
-		#piece.printInfo()
 
-		# get all available moves
-		move_list = self.getValidMoves(uid)
-		
-		# go through each tuple in move_list
-		for x_avail, y_avail in move_list:
-
-			# check if desired destination is in list of available destinations
-			if x_dest == x_avail and y_dest == y_avail:
-
-				# remove piece from current location
-				print ("remove piece from (%s, %s)" % (piece.x, piece.y))
-				self.game_board[piece.y][piece.x] = 0
-
-				# remove any pieces at destination
-				self.game_board[y_dest][x_dest] = 0
-
-				# move piece to destination
-				self.game_board[y_dest][x_dest] = piece.uid
-
-			print("")
-		
-
-
-	# compare current position against piece movement options generate
-	# list of all available locations that are within bounds and do
-	# not contain own team pieces
-	def getValidMoves(self, uid):
-		piece = self.getPieceFromUid(uid)
-		curr_x = piece.x
-		curr_y = piece.y
-
-		#piece.moves = [] 	 #holds movement tuples		
-
-		test_list = [] #simulate a valid move for uid #1
-		test_list.append((0, 4))
-		test_list.append((0, 5))
-		
-		return test_list
-
-
-	# select piece by uid, return ChessPiece object
 	def getPieceFromUid(self, uid):
 		for piece in self.all_pieces:
 			if piece.uid == uid:
 				return piece
 
 
+
+
+	def movePieceByOrigin(self, x_start, y_start, x_dest, y_dest):
+		
+		# get reference to piece
+		piece = self.getPieceFromCoords(x_start, y_start)
+
+		# move piece if destination is valid
+		self.__movePiece(piece, x_dest, y_dest)
+
+
+
+
+	def movePieceByUid(self, uid, x_dest, y_dest):
+		
+		# get reference to piece
+		piece = self.getPieceFromUid(uid)
+
+		# move piece if destination is valid
+		self.__movePiece(piece, x_dest, y_dest)
+
+	
+
+
+	def __movePiece(self, piece, x_dest, y_dest):
+
+		# get all available moves
+		move_list = self.getValidMoves(piece)
+		
+		# go through each tuple in move_list
+		for x_avail, y_avail in move_list:
+
+			# check if desired destination is in list of available destinations
+			if x_dest == x_avail and y_dest == y_avail:
+
+				# remove piece from current location
+				self.game_board[piece.y][piece.x] = 0
+
+				# remove enemy piece at destination
+				self.game_board[y_dest][x_dest] = 0
+
+				# move piece to destination
+				self.game_board[y_dest][x_dest] = piece
+
+
+
+
+	# compare current position against piece movement options generate
+	# list of all available locations that are within bounds and do
+	# not contain own team pieces
+	def getValidMoves(self, piece):
+		curr_x = piece.x
+		curr_y = piece.y
+
+
+		#all_moves = piece.moves 	 #holds movement tuples		
+
+		#return valid_moves
+
+		test_list = [] #simulate a valid move for uid #1
+		test_list.append((7, 4))
+		test_list.append((7, 5))
+		
+		return test_list
+
+
+
+
 	def printBoard(self):
+		Unicode = False
+		var = 1
 
 		print ("\nGame Board - White\n")
 
 		# print col header
-		print ("\t\t", end="")
+		print ("\t\t  ", end="")
 		for col in range(0, 8):
-			print (" {%s}" % col, end="")
+			print ("{%2s}" % col, end="")
 		print ("\n")
 
 		# print board
 		for row in range(0, 8):
 
 			# row header
-			print ("\t  {%s}" % row, end="")
+			print ("\t {%2s}" % row, end="")
 
 			# col values
 			for col in range(0, 8):
-				print ("%4s" % self.game_board[row][col], end="")
+				if isinstance(self.game_board[row][col], ChessPiece):
+					print ("%4s" % self.game_board[row][col].uid , end="")
+				else:
+					print ("%4s" % (0), end="")
 
 			print ("\n")
 
+		"""
 		print ("\nGame Board - Black\n")
 
 		# print col header
-		print ("\t\t", end="")
+		print ("\t\t  ", end="")
 		for col in range(7, -1, -1):
-			print (" {%s}" % col, end="")
+			print ("{%2s}" % col, end="")
 		print ("\n")
 
 		# print board
 		for row in range(8, 0, -1):
+			var += 1 
 
 			# row header
-			print ("\t  {%s}" % (row-1), end="")
+			print ("\t {%2s}" % (row-1), end="")
 
 			# col values
 			for col in range(8, 0, -1):
-				print ("%4s" % self.game_board[row-1][col-1], end="")
+				var += 1
+
+				# chess piece
+				if isinstance(self.game_board[row-1][col-1], ChessPiece):
+
+					# print uid
+					if (Unicode):
+						print ("%4s" % self.game_board[row-1][col-1].uid , end="")
+
+					# print piece
+					else:
+						print ("%4s" % chr(self.game_board[row-1][col-1].display_char) , end="")
+				
+				# empty space
+				else:
+
+					# print 0
+					if (Unicode):
+						print ("%4s" % (0), end="")
+
+					# print square
+					else:
+
+						# alternate white/ black squares
+						if (var % 2 == 0):
+							print (" %s  " % (chr(9632)), end="")
+
+						else:
+							print (" %s  " % (chr(9633)), end="")					
 
 			print ("\n")
-
-
-
-
-
+		"""
 
 
 
@@ -337,36 +355,15 @@ class ChessBoard(object):
 
 
 if __name__ == '__main__':
+
 	newGame = ChessGame()
-
-
 	newGame.test()
 
 	"""
-	display_pieces = []
-	display_pieces.append(u'\u2654')
-	display_pieces.append(u'\u2655')
-	display_pieces.append(u'\u2656')
-	display_pieces.append(u'\u2657')
-	display_pieces.append(u'\u2658')
-	display_pieces.append(u'\u2659')
-	display_pieces.append(u'\u265A')
-	display_pieces.append(u'\u265B')
-	display_pieces.append(u'\u265C')
-	display_pieces.append(u'\u265D')
-	display_pieces.append(u'\u265E')
-	display_pieces.append(u'\u265F')
-	"""
-
-
-	#for piece in display_pieces:
-		#print (unichr(piece), end="")
-	#print
-
-	"""	
 	print ("Display pieces using unichr()")
-	for i in range(9812, 9835):
-		print (chr(i) )
+	for i in range(9812, 9824):
+		print (chr(i), end=" ")
+	print("")
 	"""
 
 	#newGame.playGame()
