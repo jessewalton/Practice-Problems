@@ -252,5 +252,8 @@ if __name__ == '__main__':
 	
 	pieces = createPieces()
 
+	for piece in pieces:
+		piece.printInfo()
+		
 	#temp = chess_pieces.pop(30)
 	#chess_pieces.insert(30, temp)
