@@ -81,7 +81,7 @@ class ChessGame(object):
 
 		# test move
 		moveByOrigin = False
-		self.chess_board.printBoard()
+		self.chess_board.printBoard(0, 0)
 	
 		if (moveByOrigin):
 			print("Move UID 8 from (7,6) to (7,4)")
@@ -90,7 +90,7 @@ class ChessGame(object):
 			print("Move UID 8 from (7,6) to (7,4)")
 			self.chess_board.movePieceByUid(8, 7, 4) 
 
-		self.chess_board.printBoard()
+		self.chess_board.printBoard(0, 0)
 
 
 
@@ -273,12 +273,14 @@ class ChessBoard(object):
 	# display game board by iterating through all elements of 2d board array 
 	# and showing the uid of the piece at that location, the unicode character
 	# or text (to be implemented)
-	def printBoard(self):
+	# col/ row dir = direction of column and row
+	def printBoard(self, col_dir, row_dir):
 		Unicode = False		# unicode vs uid (depreciated)
 		display_type = 1 	# select: 1. uid, 2. text, 3. unicode (MV TO ARG)
 		var = 1 			# used to determine color of square (not in use)
 		display_row = []	# list of board rows
 
+		board_range = [[0, 8, 1], [7, -1, -1]]
 
 		# build title
 		display_title = ("\nGame Board - White\n")
@@ -289,7 +291,7 @@ class ChessBoard(object):
 
 		# build col header
 		col_header = ("\t\t  ")
-		for col in range(0, 8):
+		for col in range(board_range[col_dir][0], board_range[col_dir][1], board_range[col_dir][2]):
 			 col_header += ("{%2s}" % col)
 		col_header += ("\n")
 
@@ -298,14 +300,15 @@ class ChessBoard(object):
 
 
 		# build current row
-		for row in range(0, 8):
+		for row in range(board_range[row_dir][0], board_range[row_dir][1], board_range[row_dir][2]):
+	
 			curr_row = ""
 
 			# row header
 			curr_row += "\t {%2s}" % row
 
 			# check each col for piece/ empty space
-			for col in range(0, 8):
+			for col in range(board_range[col_dir][0], board_range[col_dir][1], board_range[col_dir][2]):
 
 				# if there is a piece, append it's uid/ text/ unicode
 				if isinstance(self.game_board[row][col], ChessPiece):
@@ -343,61 +346,9 @@ class ChessBoard(object):
 			display_row.append(curr_row)
 
 
-
 		for row in display_row:
 			print(row)
 
-
-		"""
-		print ("\nGame Board - Black\n")
-
-		# print col header
-		print ("\t\t  ", end="")
-		for col in range(7, -1, -1):
-			print ("{%2s}" % col, end="")
-		print ("\n")
-
-		# print board
-		for row in range(8, 0, -1):
-			var += 1 
-
-			# row header
-			print ("\t {%2s}" % (row-1), end="")
-
-			# col values
-			for col in range(8, 0, -1):
-				var += 1
-
-				# chess piece
-				if isinstance(self.game_board[row-1][col-1], ChessPiece):
-
-					# print uid
-					if (Unicode):
-						print ("%4s" % self.game_board[row-1][col-1].uid , end="")
-
-					# print piece
-					else:
-						print ("%4s" % chr(self.game_board[row-1][col-1].display_char) , end="")
-				
-				# empty space
-				else:
-
-					# print 0
-					if (Unicode):
-						print ("%4s" % (0), end="")
-
-					# print square
-					else:
-
-						# alternate white/ black squares
-						if (var % 2 == 0):
-							print (" %s  " % (chr(9632)), end="")
-
-						else:
-							print (" %s  " % (chr(9633)), end="")					
-
-			print ("\n")
-		"""
 
 
 
