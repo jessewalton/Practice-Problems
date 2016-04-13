@@ -270,33 +270,83 @@ class ChessBoard(object):
 
 
 
-
+	# display game board by iterating through all elements of 2d board array 
+	# and showing the uid of the piece at that location, the unicode character
+	# or text (to be implemented)
 	def printBoard(self):
-		Unicode = False
-		var = 1
+		Unicode = False		# unicode vs uid (depreciated)
+		display_type = 1 	# select: 1. uid, 2. text, 3. unicode (MV TO ARG)
+		var = 1 			# used to determine color of square (not in use)
+		display_row = []	# list of board rows
 
-		print ("\nGame Board - White\n")
 
-		# print col header
-		print ("\t\t  ", end="")
+		# build title
+		display_title = ("\nGame Board - White\n")
+
+		# add title to list
+		display_row.append(display_title)
+
+
+		# build col header
+		col_header = ("\t\t  ")
 		for col in range(0, 8):
-			print ("{%2s}" % col, end="")
-		print ("\n")
+			 col_header += ("{%2s}" % col)
+		col_header += ("\n")
 
-		# print board
+		# add col header to list
+		display_row.append(col_header)
+
+
+		# build current row
 		for row in range(0, 8):
+			curr_row = ""
 
 			# row header
-			print ("\t {%2s}" % row, end="")
+			curr_row += "\t {%2s}" % row
 
-			# col values
+			# check each col for piece/ empty space
 			for col in range(0, 8):
-				if isinstance(self.game_board[row][col], ChessPiece):
-					print ("%4s" % self.game_board[row][col].uid , end="")
-				else:
-					print ("%4s" % (0), end="")
 
-			print ("\n")
+				# if there is a piece, append it's uid/ text/ unicode
+				if isinstance(self.game_board[row][col], ChessPiece):
+
+					# by uid
+					if(display_type == 1):
+						curr_row += ("%4s" % self.game_board[row][col].uid)
+					
+					# by text
+					elif(display_type == 2):
+						curr_row += ("%4s" % self.game_board[row][col].uid)
+
+					# by unicode
+					else:
+						curr_row += ("%4s" % self.game_board[row][col].uid) #placeholder
+				
+				# if there is no piece, append blank space
+				else:
+
+					# as 0
+					if (display_type == 1):
+						curr_row += ("%4s" % "0")
+
+					# as "  " 
+					elif (display_type == 2):
+						curr_row += ("    ")
+
+					# as square
+					else:
+						curr_row += ("%4s" % "0") #placeholder
+
+			curr_row += ("\n")
+
+			# add current row to list
+			display_row.append(curr_row)
+
+
+
+		for row in display_row:
+			print(row)
+
 
 		"""
 		print ("\nGame Board - Black\n")
