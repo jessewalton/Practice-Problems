@@ -26,20 +26,21 @@ class ChessPiece(object):
 		self.uid 		= 	uid
 		self.team 		=	0
 
-		self.init_x	 	=	0		# orig. location (test - first move)
-		self.init_y 	=	0		# orig. location (test - first move)
+		self.init_x	 	=	0
+		self.init_y 	=	0
 		self.x 			=	0
 		self.y 			=	0
 
-		self.all_moves 		=	[]		# movement tuple
+		self.all_moves 	=	[]	
 		self.name 		=	""
+		self.text		=	""
 		self.icon 		=	""
 		self.color		= 	""
 		self.first_move =	True
 		
 		# assign team
 		if uid < 17:
-			self.team = 0 #white
+			self.team = 0 
 			self.color = "White"
 		else:
 			self.team = 1 #black
@@ -47,7 +48,6 @@ class ChessPiece(object):
 
 		# normalize value for both teams
 		piece_type = ((uid-1) % 16) + 1
-
 		
 		# initialize piece location
 		if piece_type  	<= 	self.PAWN: 			# pawns
@@ -98,7 +98,7 @@ class ChessPiece(object):
 			self.name = "Knight"
 			self.icon = self.CHAR_OFFSET + 5
 
-		elif piece_type == 	self.ROOK_R:			# rook
+		elif piece_type == 	self.ROOK_R:		# rook
 			self.x = 	piece_type - 9
 			self.y = 	7
 			self.name = "Rook"
@@ -111,8 +111,12 @@ class ChessPiece(object):
 		# invert coords if on black
 		self.x = abs(self.x - (self.team * (self.BOARD_SIZE - 1)) )
 		self.y = abs(self.y - (self.team * (self.BOARD_SIZE - 1)) )
+
+		# change unicode icon if on black
 		self.icon = self.icon + (self.team * 6)
 
+		# generate text display
+		self.text = self.color[0] + self.name[0]
 
 
 
@@ -123,20 +127,6 @@ class ChessPiece(object):
 		
 
 
-	"""
-	# unnessecary here?
-	# should be inherited by all pieces, use self.x and self.y to find current location and 
-	# uid - piece id
-	# x_coord - x coordinate destination
-	# y_coord - y coordinate destination
-	def movePiece(self, x_coord_dest, y_coord_dest):
-		#valid_move = checkDestination(x_coord_dest, y_coord_dest)
-		#if valid_move:
-		self.x = x_coord_dest
-		self.y = y_coord_dest
-	"""
-
-
 
 class Pawn(ChessPiece):
 	def __init__(self, uid):
@@ -144,9 +134,9 @@ class Pawn(ChessPiece):
 		self.multiple = 1
 
 		# valid coord move offset from current position	
-		self.all_moves = [	 					# x, y, first_move, attack_move
-			( 1, 1, False, True), 			# cond: diag. capture, desc: move diag. up-right
-			(-1, 1, False, True),			# cond: diag. capture, desc: move diag. up-left
+		self.all_moves = [	 				# x, y, first_move, attack_move
+			( 1, 1, False, True), 			# diagonal attack
+			(-1, 1, False, True),			# diagonal attack
 			( 0, 2, True,  False), 			# cond: first move only, desc: move forward two spaces
 			( 0, 1, False, False), 			# cond: no diag cap., desc: move forward one space
 		]
@@ -225,10 +215,11 @@ def createPieces():
 	chess_pieces = []
 	
 	for uid in range(1, 33):
-		#print("Current uid is: %s" % uid)
 
+		# get piece type based on uid
 		piece_type = ((uid-1) % 16) + 1
 
+		# create piece
 		if (piece_type <= 8):
 			chess_pieces.append(Pawn(uid))
 		
@@ -252,12 +243,17 @@ def createPieces():
 
 	return chess_pieces
 
+
+
+
+
+# create all pieces and print them
 if __name__ == '__main__':
 	
+	# create all pieces and return as list
 	pieces = createPieces()
 
+	# iterate through list and print piece info
 	for piece in pieces:
 		piece.printInfo()
 		
-	#temp = chess_pieces.pop(30)
-	#chess_pieces.insert(30, temp)
