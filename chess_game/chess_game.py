@@ -2,6 +2,7 @@
 
 from chess_pieces import *
 import sys
+import os
 from io import TextIOWrapper
 sys.stdout = TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
@@ -28,6 +29,7 @@ class ChessGame(object):
 	def __togglePlayer(self):
 		self.turn += 1
 		self.turn %= 2
+		return self.turn
 
 	# get user input, move pieces
 	def __playTurn(self, player):
@@ -73,29 +75,31 @@ class ChessGame(object):
 	# mess with functions
 	def test(self):
 		
-		# print board
-		print ("Initial\n")
-		self.chess_board.printBoard(0, 0)
-
-			
-		print ("Move forward 2\n")
-		self.chess_board.movePieceByUid(1, 0, 4) 
-		self.chess_board.printBoard(0, 0)
+		playingGame = True
 
 
-		print ("Move forward 1\n")
-		self.chess_board.movePieceByUid(1, 0, 3) 
-		self.chess_board.printBoard(0, 0)
+		while (playingGame):
+
+			self.chess_board.printBoard(0, 1)
+
+			_uid = int(input("Select UID: "))
+
+			if _uid == 0: break
+
+			if _uid < 1 or _uid > 32: 
+				print("UID out of range, select again")
+				continue
+
+			_x 	 = int(input("Select x: "))
+			_y   = int(input("Select y: "))
 
 
-		print ("Move forward 1\n")
-		self.chess_board.movePieceByUid(1, 0, 2) 
-		self.chess_board.printBoard(0, 0)
+			for i in range(10): print ("\n")
 
+			self.chess_board.movePieceByUid(_uid, _x, _y) 
 
-		print ("Move forward 1 - Capture 23\n")
-		self.chess_board.movePieceByUid(1, 1, 1) 
-		self.chess_board.printBoard(0, 0)
+		print ("Game Over")
+		self.chess_board.printBoard(0, 1)
 
 
 
@@ -233,16 +237,15 @@ class ChessBoard(object):
 		piece = self.getPieceFromUid(uid)
 
 		# move piece if destination is valid
-		self.__movePiece(piece, x_dest, y_dest)
+		return self.__movePiece(piece, x_dest, y_dest)
 
-	
+		
 
 
 	def __movePiece(self, piece, x_dest, y_dest):
 
 		# get all available moves
 		move_list = self.getValidMoves(piece)
-
 
 		# go through each tuple in move_list
 		for x_avail, y_avail in move_list:
@@ -266,6 +269,9 @@ class ChessBoard(object):
 				# set first_move
 				piece.first_move = False
 
+				return True
+
+		return False
 
 
 	# force move piece to new coords with no restrictions
@@ -312,6 +318,7 @@ class ChessBoard(object):
 		if isinstance(piece, Pawn):
 
 			# track if there is a diag. attack
+			# non-attack moves are not available if true
 			attack = False
 
 			# invert movement direction of white pieces
@@ -435,7 +442,7 @@ class ChessBoard(object):
 	# col/ row dir = direction of column and row
 	def printBoard(self, col_dir, row_dir):
 		Unicode = False		# unicode vs uid (depreciated)
-		display_type = 3 	# select: 1. uid, 2. text, 3. unicode (MV TO ARG)
+		display_type = 2 	# select: 1. uid, 2. text, 3. unicode (MV TO ARG)
 		var = 1 			# used to determine color of square (not in use)
 		display_row = []	# list of board rows
 
@@ -455,11 +462,10 @@ class ChessBoard(object):
 		r_incr = board_range[row_dir][2]
 
 		# build title
-		display_title = ("\nGame Board - White\n")
+		display_title = ("\nGame Board - White\n\n")
 
 		# add title to list
 		display_row.append(display_title)
-
 
 		# build col header
 		col_header = ("\t\t  ")
@@ -468,7 +474,7 @@ class ChessBoard(object):
 		col_header += ("\n")
 
 		# add col header to list
-		display_row.append(col_header)
+		#display_row.append(col_header)
 
 
 		# build current row
@@ -518,6 +524,8 @@ class ChessBoard(object):
 			# add current row to list
 			display_row.append(curr_row)
 
+		# add col header to list
+		display_row.append(col_header)
 
 		for row in display_row:
 			print(row)
