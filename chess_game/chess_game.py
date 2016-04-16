@@ -17,6 +17,7 @@ class ChessGame(object):
 
 	'Python chess game, built from scratch by Jesse Walton'
 
+	# setup game
 	def __init__(self):
 		# define instance variables
 		self.turn = 0		# 0 = White
@@ -24,7 +25,6 @@ class ChessGame(object):
 		self.player = ['White','Black']
 		# create chess board
 		self.chess_board = ChessBoard() 
-
 
 	# toggle to next player
 	def __togglePlayer(self):
@@ -34,9 +34,6 @@ class ChessGame(object):
 	# get user input, move pieces
 	def __playTurn(self, player):
 		pass
-
-
-# public 
 
 	# handles player turns and input
 	def playGame(self):
@@ -73,25 +70,39 @@ class ChessGame(object):
 
 		print ("Checkmate!")
 		print ("%s Player Wins!" % self.player[self.turn])
-		print ("Game Over")
-	
+		print ("Game Over")	
 
-
+	# mess with functions
 	def test(self):
+		
+		# setup board
+		#self.chess_board.debugMove(24, 0, 5)
+		#self.chess_board.debugMove(2, 2, 5)
 
-		# test move
-		moveByOrigin = False
-		self.chess_board.printBoard(0, 0)
-	
-		if (moveByOrigin):
-			print("Move UID 8 from (7,6) to (7,4)")
-			self.chess_board.movePieceByOrigin(7,6,7,4)
-		else:
-			print("Move UID 8 from (7,6) to (7,4)")
-			self.chess_board.movePieceByUid(8, 7, 4) 
-
+		
+		# print board
+		print ("Initial\n")
 		self.chess_board.printBoard(0, 0)
 
+			
+		print ("Move forward 2\n")
+		self.chess_board.movePieceByUid(1, 0, 4) 
+		self.chess_board.printBoard(0, 0)
+
+
+		print ("Move forward 1\n")
+		self.chess_board.movePieceByUid(1, 0, 3) 
+		self.chess_board.printBoard(0, 0)
+
+
+		print ("Move forward 1\n")
+		self.chess_board.movePieceByUid(1, 0, 2) 
+		self.chess_board.printBoard(0, 0)
+
+
+		print ("Move forward 1 - Capture 23\n")
+		self.chess_board.movePieceByUid(1, 1, 1) 
+		self.chess_board.printBoard(0, 0)
 
 
 
@@ -186,7 +197,7 @@ class ChessBoard(object):
 	def __isCheckmate(self):
 		print ("isCheckmate()") 	#debug
 		if (True):
-			return True
+			return False
 
 
 
@@ -207,11 +218,18 @@ class ChessBoard(object):
 
 	def movePieceByOrigin(self, x_start, y_start, x_dest, y_dest):
 		
+
+		# check coordinates
+		if self.getPieceFromCoords(x_start, y_start) == 0:
+			return 0
+
 		# get reference to piece
 		piece = self.getPieceFromCoords(x_start, y_start)
 
 		# move piece if destination is valid
 		self.__movePiece(piece, x_dest, y_dest)
+
+		return 1
 
 
 
@@ -231,7 +249,8 @@ class ChessBoard(object):
 
 		# get all available moves
 		move_list = self.getValidMoves(piece)
-		
+
+
 		# go through each tuple in move_list
 		for x_avail, y_avail in move_list:
 
@@ -247,26 +266,173 @@ class ChessBoard(object):
 				# move piece to destination
 				self.game_board[y_dest][x_dest] = piece
 
+				# set new piece coordinates
+				piece.x = x_dest
+				piece.y = y_dest
+
+				# set first_move
+				piece.first_move = False
 
 
 
-	# compare current position against piece movement options generate
-	# list of all available locations that are within bounds and do
-	# not contain own team pieces
+	# force move piece to new coords with no restrictions
+	def debugMove(self, uid, x_dest, y_dest):
+
+		# get piece
+		piece = self.getPieceFromUid(uid)
+
+		# remove piece from current location
+		self.game_board[piece.y][piece.x] = 0
+
+		# remove enemy piece at destination
+		self.game_board[y_dest][x_dest] = 0
+
+		# move piece to destination
+		self.game_board[y_dest][x_dest] = piece
+
+		# set first_move
+		piece.first_move = False
+
+
+	# check coordinates, return -1 if empty, 0 if white piece, 1 if black piece
+	def whatIsHere(self, x, y):
+		if isinstance(self.game_board[y][x], ChessPiece):
+			if self.game_board[y][x].team == 0:
+				return 0  	# white piece
+			else:
+				return 1 	# black piece
+		else:
+			return -1 		# empty space
+
+
+
+	# return a list coordinate tuples that are valid moves for the piece
 	def getValidMoves(self, piece):
-		curr_x = piece.x
-		curr_y = piece.y
+
+		# debug
+		print ("Move list: %s %s (%s)" % (piece.color, piece.name, piece.uid), end=" ")
+		print ("at (%s, %s)" % (piece.x, piece.y))
+
+		valid_moves = []
+
+		# Pawn move/ attack logic
+		if isinstance(piece, Pawn):
+
+			# track if there is a diag. attack
+			attack = False
+
+			# invert movement direction of white pieces
+			pawn_mv_dir = 1 if (piece.team == 1) else -1
+
+			# check all move 
+			for index, (x, y, first, atk) in enumerate(piece.all_moves):
+				
+				# calc coord offset based on team
+				x_mod = x * pawn_mv_dir
+				y_mod = y * pawn_mv_dir
+
+				# add offset to current location
+				dest_x = piece.x + x_mod
+				dest_y = piece.y + y_mod
+
+				# debug
+				sign = "+" if (piece.team == 1) else "-"
+				print("[%s] (%s, %s) %s" % (index, piece.x, piece.y, sign), end=" ")
+				print("(%2s, %2s) --> (%2s, %2s)\t" % ( x, y, dest_x, dest_y), end=" ")
+	
+				# skip value if out of range
+				if dest_x < 0 or dest_x > 7 \
+				or dest_y < 0 or dest_y > 7:
+					print("out of range")
+					continue
+
+				# determine empty/ white piece/ black piece
+				teamAtDest = self.whatIsHere(dest_x, dest_y)
+
+				# piece is in attack range, ignore standard moves
+				if index >= 2 and attack == True:
+					print("attack found, skip index")
+					continue
 
 
-		#all_moves = piece.moves 	 #holds movement tuples		
+				# check attack spaces (diagonal)
+				if index == 0 or index == 1:
+
+					# ally at location, invalid
+					if teamAtDest == piece.team:
+						print ("ally at diag, no add")
+
+					# empty at location, invalid
+					elif teamAtDest == -1:
+						print ("blank at diag, no add")
+					
+					# enemy at location, valid
+					else:
+						print("enemy at diag, add (%s, %s)" % (dest_x, dest_y))
+						valid_moves.append((dest_x, dest_y))
+						attack = True
+
+
+				# check for first move (2 spaces)
+				if index == 2:
+
+					# has this piece moved before?
+					if piece.first_move == first:
+
+						# ally at location, invalid
+						if teamAtDest == piece.team:
+							print ("ally at 2 ahead, no add")
+
+						# empty at location
+						elif teamAtDest == -1:
+							print("empty at 2 ahead, add (%s, %s)" % (dest_x, dest_y))
+							valid_moves.append((dest_x, dest_y))
+
+						else:
+							print ("enemy at 2 ahead, no add")
+							
+
+				# check single move
+				if index == 3:
+
+					# ally at location, invalid
+					if teamAtDest == piece.team:
+						pass
+
+					# empty at location
+					elif teamAtDest == -1:
+						print("empty at 1 ahead, add (%s, %s)" % (dest_x, dest_y))
+						valid_moves.append((dest_x, dest_y))
+					
+					# enemy at location, invalid
+					else: 
+						print("enemy at 1 ahead, no add")
+					
+
+				
+
+
+	
+
+		# other piece type
+		else:
+			for x, y in piece.all_moves:
+				print ("x: %s\ty: %s" % (x, y * pawn_mv_dir))
+
+
+
+		
+
+		
 
 		#return valid_moves
 
-		test_list = [] #simulate a valid move for uid #1
-		test_list.append((7, 4))
-		test_list.append((7, 5))
+		#test_list = [] #simulate a valid move for uid #1
+		#test_list.append((7, 4))
+		#test_list.append((7, 5))
+		#valid_moves = test_list
 		
-		return test_list
+		return valid_moves
 
 
 
@@ -280,7 +446,20 @@ class ChessBoard(object):
 		var = 1 			# used to determine color of square (not in use)
 		display_row = []	# list of board rows
 
-		board_range = [[0, 8, 1], [7, -1, -1]]
+		#specify range for forward/ backward print
+		board_range = [ 
+			[0, 8, 1], 
+			[7, -1, -1]
+		]
+
+		# set col range args
+		c_start = board_range[col_dir][0]
+		c_end 	= board_range[col_dir][1]
+		c_incr 	= board_range[col_dir][2]
+
+		r_start = board_range[row_dir][0]
+		r_end = board_range[row_dir][1]
+		r_incr = board_range[row_dir][2]
 
 		# build title
 		display_title = ("\nGame Board - White\n")
@@ -291,8 +470,8 @@ class ChessBoard(object):
 
 		# build col header
 		col_header = ("\t\t  ")
-		for col in range(board_range[col_dir][0], board_range[col_dir][1], board_range[col_dir][2]):
-			 col_header += ("{%2s}" % col)
+		for col in range(c_start, c_end, c_incr):
+			col_header += ("{%2s}" % col)
 		col_header += ("\n")
 
 		# add col header to list
@@ -300,7 +479,7 @@ class ChessBoard(object):
 
 
 		# build current row
-		for row in range(board_range[row_dir][0], board_range[row_dir][1], board_range[row_dir][2]):
+		for row in range(r_start, r_end, r_incr):
 	
 			curr_row = ""
 
@@ -308,7 +487,7 @@ class ChessBoard(object):
 			curr_row += "\t {%2s}" % row
 
 			# check each col for piece/ empty space
-			for col in range(board_range[col_dir][0], board_range[col_dir][1], board_range[col_dir][2]):
+			for col in range(c_start, c_end, c_incr):
 
 				# if there is a piece, append it's uid/ text/ unicode
 				if isinstance(self.game_board[row][col], ChessPiece):
