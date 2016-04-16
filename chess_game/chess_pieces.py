@@ -31,17 +31,20 @@ class ChessPiece(object):
 		self.x 			=	0
 		self.y 			=	0
 
-		self.moves 		=	[]		# movement tuple
+		self.all_moves 		=	[]		# movement tuple
 		self.name 		=	""
 		self.icon 		=	""
+		self.color		= 	""
 		self.first_move =	True
 		
 		# assign team
 		if uid < 17:
 			self.team = 0 #white
+			self.color = "White"
 		else:
 			self.team = 1 #black
-		
+			self.color = "Black"
+
 		# normalize value for both teams
 		piece_type = ((uid-1) % 16) + 1
 
@@ -115,14 +118,13 @@ class ChessPiece(object):
 
 	# display info for piece
 	def printInfo(self):
-		player = ["White","Black"]
-		print ("(%2s) %s %s \t" % (self.uid, player[self.team], self.name), end="")
+		print ("(%2s) %s %s \t" % (self.uid, self.color, self.name), end="")
 		print ("(%s, %s) -> %s" % (self.x, self.y, self.icon))
 		
 
 
-
-	""" unnessecary here? """
+	"""
+	# unnessecary here?
 	# should be inherited by all pieces, use self.x and self.y to find current location and 
 	# uid - piece id
 	# x_coord - x coordinate destination
@@ -132,7 +134,7 @@ class ChessPiece(object):
 		#if valid_move:
 		self.x = x_coord_dest
 		self.y = y_coord_dest
-	
+	"""
 
 
 
@@ -140,11 +142,13 @@ class Pawn(ChessPiece):
 	def __init__(self, uid):
 		super(Pawn, self).__init__(uid)
 		self.multiple = 1
-		self.moves = [	 		# valid coord move offset from current position
-			( 0, 2), 			# cond: first move only, desc: move forward two spaces
-			( 0, 1), 			# cond: no diag cap., desc: move forward one space
-			( 1, 1), 			# cond: diag. capture, desc: move diag. up-right
-			(-1, 1)				# cond: diag. capture, desc: move diag. up-left
+
+		# valid coord move offset from current position	
+		self.all_moves = [	 					# x, y, first_move, attack_move
+			( 1, 1, False, True), 			# cond: diag. capture, desc: move diag. up-right
+			(-1, 1, False, True),			# cond: diag. capture, desc: move diag. up-left
+			( 0, 2, True,  False), 			# cond: first move only, desc: move forward two spaces
+			( 0, 1, False, False), 			# cond: no diag cap., desc: move forward one space
 		]
 
 
@@ -152,7 +156,7 @@ class Rook(ChessPiece):
 	def __init__(self, uid):
 		super(Rook, self).__init__(uid)
 		self.multiple = 7
-		self.moves = [
+		self.all_moves = [
 			( 0,  1),
 			( 1,  0),
 			( 0, -1),
@@ -164,7 +168,7 @@ class Knight(ChessPiece):
 	def __init__(self, uid):
 		super(Knight, self).__init__(uid)
 		self.multiple = 1
-		self.moves = [
+		self.all_moves = [
 			( 1,  2),
 			( 1, -2),
 			(-1,  2),
@@ -180,7 +184,7 @@ class Bishop(ChessPiece):
 	def __init__(self, uid):
 		super(Bishop, self).__init__(uid)
 		self.multiple = 7
-		self.moves = [
+		self.all_moves = [
 			( 1,  1),
 			( 1, -1),
 			(-1,  1),
@@ -191,7 +195,7 @@ class Queen(ChessPiece):
 	def __init__(self, uid):
 		super(Queen, self).__init__(uid)
 		self.multiple = 7
-		self.moves = [
+		self.all_moves = [
 			( 0,  1),
 			( 1,  0),
 			( 0, -1),
@@ -207,7 +211,7 @@ class King(ChessPiece):
 	def __init__(self, uid):
 		super(King, self).__init__(uid)
 		self.multiple = 1
-		self.moves = [
+		self.all_moves = [
 			( 0,  1),
 			( 1,  0),
 			( 0, -1),
