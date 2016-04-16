@@ -6,8 +6,6 @@ from io import TextIOWrapper
 sys.stdout = TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 
-
-
 """ 
 	Class: 	ChessGame 
 	Usage: 	Call from main to begin game, handles board and player turns
@@ -74,11 +72,6 @@ class ChessGame(object):
 
 	# mess with functions
 	def test(self):
-		
-		# setup board
-		#self.chess_board.debugMove(24, 0, 5)
-		#self.chess_board.debugMove(2, 2, 5)
-
 		
 		# print board
 		print ("Initial\n")
@@ -442,7 +435,7 @@ class ChessBoard(object):
 	# col/ row dir = direction of column and row
 	def printBoard(self, col_dir, row_dir):
 		Unicode = False		# unicode vs uid (depreciated)
-		display_type = 1 	# select: 1. uid, 2. text, 3. unicode (MV TO ARG)
+		display_type = 3 	# select: 1. uid, 2. text, 3. unicode (MV TO ARG)
 		var = 1 			# used to determine color of square (not in use)
 		display_row = []	# list of board rows
 
@@ -481,6 +474,7 @@ class ChessBoard(object):
 		# build current row
 		for row in range(r_start, r_end, r_incr):
 	
+			# string to build row display
 			curr_row = ""
 
 			# row header
@@ -498,11 +492,11 @@ class ChessBoard(object):
 					
 					# by text
 					elif(display_type == 2):
-						curr_row += ("%4s" % self.game_board[row][col].uid)
+						curr_row += ("%4s" % self.game_board[row][col].text)
 
 					# by unicode
 					else:
-						curr_row += ("%4s" % self.game_board[row][col].uid) #placeholder
+						curr_row += ("%4s" % chr(self.game_board[row][col].icon)) #placeholder
 				
 				# if there is no piece, append blank space
 				else:
@@ -517,7 +511,7 @@ class ChessBoard(object):
 
 					# as square
 					else:
-						curr_row += ("%4s" % "0") #placeholder
+						curr_row += ("%4s" % "    ") #placeholder
 
 			curr_row += ("\n")
 
