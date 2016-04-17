@@ -1,14 +1,11 @@
 
-
-
-
-
-
 """ 
 	Class:	ChessPiece 
 	Usage: 	contains team, current location, type, uid and movement patterns
 
 """
+
+
 class ChessPiece(object):
 	BOARD_SIZE 	= 	8
 	CHAR_OFFSET = 	9811
